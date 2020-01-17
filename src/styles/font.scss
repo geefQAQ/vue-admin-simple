@@ -1,0 +1,83 @@
+@font-face {
+    // 鑫神的优化
+    font-family: "va-icon";
+    src: url('../assets/fonts/iconfont.eot'); /* IE9 */
+    src: local('☺'),
+    url('../assets/fonts/iconfont.woff') format('woff'),
+    url('../assets/fonts/iconfont.ttf'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    
+}
+
+.va-icon {
+    font-family: "va-icon" !important;
+    font-size: 18px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-right: 16px;
+}
+
+.va-icon__view:before {
+    content: "\e633";
+}
+  
+.va-icon__viewoff:before {
+    content: "\e634";
+}
+
+.va-icon__time:before {
+    content: "\e638";
+}
+
+.va-icon__credit:before {
+    content: "\e639";
+}
+
+.va-icon__renew:before {
+    content: "\e63a";
+}
+
+.va-icon__order:before {
+    content: "\e63b";
+}
+
+.va-icon__link:before {
+    content: "\e63e";
+}
+
+.va-icon__setting:before {
+    content: "\e63f";
+}
+  
+.va-icon__lock:before {
+    content: "\e644";
+}
+  
+.va-icon__unlock:before {
+    content: "\e645";
+}
+  
+.va-icon__flow:before {
+    content: "\e646";
+}
+  
+.va-icon__filter:before {
+    content: "\e648";
+}
+  
+.va-icon__user:before {
+    content: "\e64d";
+}
+
+.va-icon__list:before {
+    content: "\e64f";
+}
+
+.va-icon__check:before {
+    content: "\e651";
+  }
+  
+.va-icon__close:before {
+    content: "\e652";
+}
+  

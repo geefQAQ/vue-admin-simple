@@ -1,0 +1,58 @@
+@import './elment-ui.scss';
+@import './variables.scss';
+@import './transition.scss';
+@import './sidebar.scss';
+
+body {
+    font-size: 14px;
+    height: 100%;
+    margin: 0; // 考虑引入 normalize css
+    -webkit-font-smoothing: antialiased;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+html {
+    height: 100%;
+    box-sizing: padding-box;
+}
+
+#app {
+    height: 100%;
+}
+
+p, h1, h2, h3, h4, ul{
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+input {
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+    font-size: 100%;
+}
+
+button {
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    &:focus {
+        outline: none;
+        -webkit-appearance: none;
+    }
+}
+
+a,
+a:focus,
+a:hover {
+    text-decoration: none;
+}
+
+// 全局样式
+.va-app-container {
+    padding: 20px;
+}

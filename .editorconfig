@@ -1,0 +1,17 @@
+# http://editorconfig.org
+# 设置为true的时候才会停止搜索.editorconfig文件
+root = true
+# 匹配除/之外的任意字符
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 
+end_of_line = lf
+# 是否让文件以空行结束
+insert_final_newline = true
+#  是否删除行尾空格
+trim_trailing_whitespace = true
+
+[*.md]
+insert_final_newline = false
+trim_trailing_whitespace = false

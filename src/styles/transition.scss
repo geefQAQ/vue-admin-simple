@@ -1,0 +1,64 @@
+/* 面包屑 transition */
+
+/* 这个动画的问题是
+    如 d/e/ta 变成 d/e/tr 时，tr 的 enter 动画是在 ta leave 动画未完成时开始，
+    所以当 tr 进入完成后，ta 移出刚好完成，会有一个突然向左的位移
+
+    解决方案1：leave 的 item 脱离文档流？？，那么 enter 的 item 会排列在前一个后面
+    通过 -move 实现
+    https://cn.vuejs.org/v2/guide/transitions.html#%E5%88%97%E8%A1%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E8%BF%87%E6%B8%A1
+
+    解决方案2： enter 设置 delay ，delay 时间 = leave 的 duration，简单说就是离开后再进入
+
+    方案1可以实现 进入/离开 效果同时出现，但是仔细发现会发现有点问题，个人不喜欢
+
+    方案2可以更加简洁，没有了重叠的效果，但是进入时会有明显的 delay
+
+    
+
+*/
+
+.breadcrumb-enter,
+.breadcrumb-leave-to
+ {
+    opacity: 0;
+    transform: translateX(20px)
+}
+.breadcrumb-enter-active {
+    transition: all .3s .2s;
+}
+
+.breadcrumb-leave-active
+{
+    transition: all .2s;
+}
+
+// 方案1
+
+// .breadcrumb-move {
+//     transition: all .5s;
+//   }
+  
+//   .breadcrumb-leave-active {
+//     position: absolute;
+//   }
+
+/* fade-transform */
+
+// enter-active 包括 enter -> enter-to
+// leave-active 包括 leave -> leave-to
+
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+    transition: all .5s;
+}
+
+.fade-transform-enter {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}

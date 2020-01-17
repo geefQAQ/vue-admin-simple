@@ -1,0 +1,71 @@
+.va-sidebar-container {
+    transition: width .2s;
+    width: $sideBarRegWidth !important;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 210px;
+    z-index: 30;
+}
+
+.va-main-container {
+    position: relative;
+    min-height: 100%;
+    margin-left: $sideBarRegWidth;
+    transition: margin-left .2s;
+}
+
+// 不覆盖ui组件其他滚动条样式
+.scrollbar-wrapper {
+    background-color: rgb(48, 65, 86) ;
+    overflow-x: hidden !important;
+}
+
+.va-sidebar-container .el-submenu .el-menu-item {
+    background-color: #1f2d3d !important;
+
+    &:hover {
+        background-color: #1f2d3d !important;
+    }
+}
+
+.nest-menu .el-submenu  .el-submenu__title{
+    background-color: #1f2d3d !important;
+}
+
+// sidebar 缩小样式
+.hideSidebar {
+    .va-sidebar-container {
+        width: $sideBarShrinkWidth !important;
+    }
+    .va-main-container {
+        margin-left: $sideBarShrinkWidth;
+        // margin-left: 0;
+    }
+    // 隐藏 sidebar item 的下箭头和文本
+    .el-submenu__icon-arrow  {
+        display: none;
+    }
+    .el-menu-item > span,
+    .el-submenu__title > span {
+        visibility: hidden;
+    }
+}
+// mobile响应式
+.mobile {
+    .va-main-container {
+        margin-left: 0;
+    }
+    .va-sidebar-container {
+        width: $sideBarRegWidth !important;
+        transform: translateX(0);
+        transition: transform .2s;
+    }
+
+    &.hideSidebar {
+        .va-sidebar-container {
+            transform: translateX(-$sideBarRegWidth)
+        }
+    }
+}

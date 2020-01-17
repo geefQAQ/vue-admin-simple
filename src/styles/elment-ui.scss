@@ -1,0 +1,14 @@
+// 覆盖 element-ui 样式
+.el-menu {
+  border: none;
+  // 保证和包含块 va-sidebar-container 宽度一致，动画会顺滑
+  width: 100%;
+}
+.el-breadcrumb__inner a {
+    font-weight: 400;
+}
+
+.el-menu-item i,
+.el-submenu__title i {
+  color: rgb(191, 203, 217);
+}
