@@ -41,11 +41,10 @@ export default {
   computed: {
     // sidebar随着url改变而获得激活对应的导航
     activeMenu() {
-      const route = this.$route
-      const { path } = route
-      return path
+      return this.$route.path
     },
     routes: function() {
+      // 只有静态路由，不能查看addRoutes添加后的完整路由，也没有官方api
       return this.$router.options.routes
     },
     ...mapGetters([

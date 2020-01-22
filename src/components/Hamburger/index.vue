@@ -3,18 +3,24 @@
     class="hamburger"
     @click="toggleClick"
   >
-    <i class="va-icon va-icon__setting"></i>
+    <i :class="icon? 'el-icon-s-fold':'el-icon-s-unfold'"></i>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Hamburger',
+  props: {
+    icon: {
+      type: Boolean,
+      required: true,
+    }
+  },
   methods: {
       toggleClick() {
         this.$emit('toggleClick')
     }
-  }
+  },
 }
 </script>
 
@@ -28,9 +34,8 @@ export default {
       background: rgba(0,0,0,0.025)
     }
 }
-.va-icon__setting {
-  display: inline-block;
+.el-icon-s-fold, .el-icon-s-unfold {
+  font-size: 20px;
   vertical-align: middle;
-  margin: 0;
 }
 </style>

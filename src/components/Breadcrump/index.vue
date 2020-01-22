@@ -20,7 +20,6 @@ export default {
   data: function () {
       return {
           levelList: null,
-          test: null
       }
   },
   watch: {
@@ -44,8 +43,8 @@ export default {
        */ 
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0];
-      this.test = first
-      if (!this.isDashboard(this.test)) {
+      // dashboard不是第一个元素，就插入为第一个元素
+      if (!this.isDashboard(first)) {
         // 不用unshift 是因为返回的是数组长度
         matched = [{path: '/dashboard', meta: {title: 'Dashboard'}}].concat(matched)
       }

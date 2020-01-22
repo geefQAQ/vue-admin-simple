@@ -23,6 +23,7 @@ export default {
             store.dispatch('app/closeSideBar', { withoutAnimation: true })
             store.dispatch('app/toggleDevice', 'mobile')
         }
+        console.log('route', this.$route.fullPath)
     },
     methods: {
         // mounted的时候调用

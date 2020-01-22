@@ -1,6 +1,6 @@
 <template>
   <div class="va-navbar">
-    <hamburger class="va-hamburger-container" @toggleClick="toggleSidebar"/>
+    <hamburger class="va-hamburger-container" :icon="icon" @toggleClick="toggleSidebar"/>
     <breadcrump />
     <userinfo />
   </div>
@@ -17,6 +17,11 @@ export default {
     Hamburger,
     Breadcrump,
     Userinfo
+  },
+  computed: {
+    icon() {
+      return this.$store.state.app.sidebar.opened
+    }
   },
   methods: {
     toggleSidebar () {
