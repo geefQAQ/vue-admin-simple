@@ -1,14 +1,30 @@
 <template>
     <div>
         <panel-group @handleSetLineChartData="handleSetLineChartData" />
-        <el-row style="background: #fff; padding: 16px 16px 0;">
+        <el-row class="va-chart-wrapper">
             <line-chart :chart-data="lineChartData"/>
+        </el-row>
+        <el-row :gutter="32">
+            <el-col :span="8">
+                <div class="va-chart-wrapper">
+                    <radar-chart />
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="va-chart-wrapper">
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="va-chart-wrapper">
+                </div>
+            </el-col>
         </el-row>
     </div>
 </template>
 <script>
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
+import RadarChart from './components/RadarChart'
 const lineChartData = {
   newVisitors: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -34,7 +50,7 @@ export default {
             lineChartData: lineChartData.newVisitors
         }
     },
-    components: { PanelGroup, LineChart },
+    components: { PanelGroup, LineChart, RadarChart},
     methods: {
         handleSetLineChartData(val) {
             this.lineChartData = lineChartData[val]
@@ -43,4 +59,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.va-chart-wrapper {
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+    background-color: #fff;
+    height: 100%;
+}
 </style>

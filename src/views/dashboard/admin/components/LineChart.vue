@@ -122,8 +122,7 @@ export default {
                     type: 'line',
                     smooth: false,
                     animationDuration: 500,
-                    animationEasing: 'quadraticOut'
-
+                    animationEasing: 'quadraticOut',
                 }]
             })
         }
