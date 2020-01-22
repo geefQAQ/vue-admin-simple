@@ -1,7 +1,8 @@
 <template>
     <el-row :gutter="40" class="va-panel-group">
+        <!-- 在 el-col 等下添加 click 事件，要添加修饰符.native，原理暂不清楚 -->
         <el-col :span="6" class="va-card-panel-col">
-            <div class="va-panel-content">
+            <div @click="handleClick('newVisitors')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-visitor">
                     <div class="el-icon-user-solid va-panel-icon"></div>
                 </div>
@@ -17,7 +18,7 @@
             </div>
         </el-col>
         <el-col :span="6" class="va-card-panel-col">
-            <div class="va-panel-content">
+            <div @click="handleClick('messages')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-message">
                     <div class="el-icon-chat-dot-square va-panel-icon"></div>
                 </div>
@@ -33,7 +34,7 @@
             </div>
         </el-col>
         <el-col :span="6" class="va-card-panel-col">
-            <div class="va-panel-content">
+            <div @click="handleClick('purchases')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-money">
                     <div class="el-icon-money va-panel-icon"></div>
                 </div>
@@ -49,7 +50,7 @@
             </div>
         </el-col>
         <el-col :span="6" class="va-card-panel-col">
-           <div class="va-panel-content">
+           <div @click="handleClick('shoppings')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-shopping">
                     <div class="el-icon-shopping-cart-full va-panel-icon"></div>
                 </div>
@@ -71,10 +72,19 @@ import CountTo from 'vue-count-to'
 
 export default {
     name: 'PanelGroup',
-    components: { CountTo }
+    components: { CountTo },
+    methods: {
+        handleClick(val) {
+            // 触发父组件名为 handleSetLineChartData 的事件，并传递参数
+            this.$emit('handleSetLineChartData', val)
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>
+.va-panel-group {
+    margin-bottom: 30px;
+}
 .va-panel-content {
     height: 108px;
     overflow: hidden;
