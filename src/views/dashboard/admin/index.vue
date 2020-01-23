@@ -12,10 +12,12 @@
             </el-col>
             <el-col :span="8">
                 <div class="va-chart-wrapper">
+                    <pie-chart />
                 </div>
             </el-col>
             <el-col :span="8">
                 <div class="va-chart-wrapper">
+                    <bar-chart />
                 </div>
             </el-col>
         </el-row>
@@ -25,6 +27,8 @@
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import RadarChart from './components/RadarChart'
+import PieChart from './components/PieChart'
+import BarChart from './components/BarChart'
 const lineChartData = {
   newVisitors: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -50,7 +54,7 @@ export default {
             lineChartData: lineChartData.newVisitors
         }
     },
-    components: { PanelGroup, LineChart, RadarChart},
+    components: { PanelGroup, LineChart, RadarChart, PieChart, BarChart},
     methods: {
         handleSetLineChartData(val) {
             this.lineChartData = lineChartData[val]

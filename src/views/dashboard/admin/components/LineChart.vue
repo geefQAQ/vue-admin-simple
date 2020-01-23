@@ -6,7 +6,9 @@ import echarts from 'echarts'
 // 为什么要用require，不用import
 // require('echarts/theme/macarons') 
 import 'echarts/theme/macarons'
+import resize from './mixin/resize'
 export default {
+    mixins: [ resize ],
     props: {
         width: {
             type: String,

@@ -4,7 +4,9 @@
 <script>
 import echarts from 'echarts'
 import 'echarts/theme/macarons'
+import resize from './mixin/resize'
 export default {
+    mixins: [ resize ],
     props: {
         width: {
             type: String,
