@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="40" class="va-panel-group">
         <!-- 在 el-col 等下添加 click 事件，要添加修饰符.native，原理暂不清楚 -->
-        <el-col :span="6" class="va-card-panel-col">
+        <el-col :xs="12" :sm="12" :lg="6" class="va-card-panel-col">
             <div @click="handleClick('newVisitors')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-visitor">
                     <div class="el-icon-user-solid va-panel-icon"></div>
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </el-col>
-        <el-col :span="6" class="va-card-panel-col">
+        <el-col :xs="12" :sm="12" :lg="6" class="va-card-panel-col">
             <div @click="handleClick('messages')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-message">
                     <div class="el-icon-chat-dot-square va-panel-icon"></div>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </el-col>
-        <el-col :span="6" class="va-card-panel-col">
+        <el-col :xs="12" :sm="12" :lg="6" class="va-card-panel-col">
             <div @click="handleClick('purchases')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-money">
                     <div class="el-icon-money va-panel-icon"></div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </el-col>
-        <el-col :span="6" class="va-card-panel-col">
+        <el-col :xs="12" :sm="12" :lg="6" class="va-card-panel-col">
            <div @click="handleClick('shoppings')" class="va-panel-content">
                 <div class="va-panel-icon-wrapper va-icon-shopping">
                     <div class="el-icon-shopping-cart-full va-panel-icon"></div>
@@ -82,8 +82,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.va-panel-group {
-    margin-bottom: 30px;
+// 这样写直接兼容多行的样式
+.va-card-panel-col {
+    margin-bottom: 32px;
 }
 .va-panel-content {
     height: 108px;

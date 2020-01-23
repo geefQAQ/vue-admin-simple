@@ -5,20 +5,26 @@
             <line-chart :chart-data="lineChartData"/>
         </el-row>
         <el-row :gutter="32">
-            <el-col :span="8">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="va-chart-wrapper">
                     <radar-chart />
                 </div>
             </el-col>
-            <el-col :span="8">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="va-chart-wrapper">
                     <pie-chart />
                 </div>
             </el-col>
-            <el-col :span="8">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="va-chart-wrapper">
                     <bar-chart />
                 </div>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="8">
+            <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" style="margin-bottom: 32px;">
+                <transaction-table />
             </el-col>
         </el-row>
     </div>
@@ -29,6 +35,7 @@ import LineChart from './components/LineChart'
 import RadarChart from './components/RadarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
+import TransactionTable from './components/TransactionTable'
 const lineChartData = {
   newVisitors: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -54,7 +61,7 @@ export default {
             lineChartData: lineChartData.newVisitors
         }
     },
-    components: { PanelGroup, LineChart, RadarChart, PieChart, BarChart},
+    components: { PanelGroup, LineChart, RadarChart, PieChart, BarChart, TransactionTable},
     methods: {
         handleSetLineChartData(val) {
             this.lineChartData = lineChartData[val]

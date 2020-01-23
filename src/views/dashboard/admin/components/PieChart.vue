@@ -41,7 +41,7 @@ export default {
         },
         setOptions() {
             this.chart.setOption({
-                tooltips: {
+                tooltip: {
                     trigger: 'item',
                     // https://www.echartsjs.com/zh/option.html#tooltip.formatter
                     // 饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）
