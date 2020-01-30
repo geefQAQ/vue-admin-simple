@@ -95,8 +95,8 @@ export default {
           // 这个函数作用是：获取route的redirect值，因为存在未登录而去访问需要权限的url，此时会重定向到login，同时带上一个参数redirect
           // 所以要获取这个参数并赋值，当login成功时，跳转到这个原本想去的url
           handler: function(route) {
-              console.log('route change --->', route)
-              this.redirect = route.query && route.query.redirect
+            //   console.log('route change --->', route)
+              this.redirect = route.query && route.query.redirecthandlelogin
           },
           immediate: true
       }
@@ -120,7 +120,7 @@ export default {
         // 再次验证
         this.$refs.loginForm.validate(valid => {
             if(valid) {
-                console.log('handlelogin---->', valid)
+                // console.log('handlelogin---->', valid)
                 // 跳转到dashboard
                 this.loading = true
                 this.$store.dispatch('user/login', this.loginForm)

@@ -1,7 +1,6 @@
 <template>
     <el-table
         :data="list"
-        stripe
         highlight-current-row
         size="mini"
     >

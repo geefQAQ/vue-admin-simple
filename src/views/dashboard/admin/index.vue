@@ -26,6 +26,12 @@
             <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" style="margin-bottom: 32px;">
                 <transaction-table />
             </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="6" :xl="6" style="margin-bottom: 32px;">
+                <todo-list />
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="6" :xl="6" style="margin-bottom: 32px;">
+                <box-card />
+            </el-col>
         </el-row>
     </div>
 </template>
@@ -36,6 +42,8 @@ import RadarChart from './components/RadarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
+import TodoList from './components/TodoList/index'
+import BoxCard from './components/BoxCard'
 const lineChartData = {
   newVisitors: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -61,7 +69,7 @@ export default {
             lineChartData: lineChartData.newVisitors
         }
     },
-    components: { PanelGroup, LineChart, RadarChart, PieChart, BarChart, TransactionTable},
+    components: { PanelGroup, LineChart, RadarChart, PieChart, BarChart, TransactionTable, TodoList, BoxCard},
     methods: {
         handleSetLineChartData(val) {
             this.lineChartData = lineChartData[val]

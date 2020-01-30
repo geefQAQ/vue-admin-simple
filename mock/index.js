@@ -2,9 +2,10 @@ import Mock from "mockjs";
 import { param2Obj } from "../src/utils";
 import user from "./user";
 import table from "./table";
+import search from "./remote-search";
 
 // mock = [{}, {}, {}]
-const mocks = [...user, ...table];
+const mocks = [...user, ...table, ...search];
 
 export function mockXHR() {
   function XHR2ExpressReqWrap(respond) {
