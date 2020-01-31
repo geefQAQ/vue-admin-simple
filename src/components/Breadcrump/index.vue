@@ -1,5 +1,5 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
+  <el-breadcrumb class="va-breadcrumb" separator="/">
     <!-- breadcrumb 样式在 transition.scss -->
     <transition-group name="breadcrumb">
       <!-- 注意：item 的 key 不能为index ，
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-breadcrumb.el-breadcrumb {
+.va-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
   line-height: 50px;

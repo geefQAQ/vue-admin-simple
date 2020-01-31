@@ -169,17 +169,28 @@ header {
 }
 // footer
 .va-todo-footer {
+    position: relative;
     height: 42px;
     line-height: 42px;
     padding: 0 10px;
     background: #fff;
     font-size: 12px;
+    &::before {
+        content: '';
+        position: absolute;
+        height: 42px;
+        top: 0; left: 0; right: 0;
+        overflow: hidden;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
+    }
 }
 .va-todo-remaining {
     color: #999;
     float: left;
 }
 .va-todo-filter {
+    position: relative;
+    z-index: 1;
     float: right;
     li {
         float: left;

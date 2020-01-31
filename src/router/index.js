@@ -49,11 +49,37 @@ export const constantRoutes = [
         component: () => import("@/views/dashboard/index"),
         meta: {
           title: "Dashboard",
-          icon: "credit",
+          icon: "odometer",
           affix: true
         }
       }
     ]
+  },
+  {
+    path: "/guide",
+    component: Layout,
+    redirect: '/guide/index',
+    children: [{
+      path: "index",
+      component: () => import("@/views/guide/index"),
+      name: "Guide",
+      meta: {
+        title: "Guide",
+        icon: "guide"
+      },
+      }
+    ]
+  },
+  {
+    path: '/icons',
+    component: Layout,
+    redirect: '/icons/index',
+    children: [{
+      path: 'index',
+      component: () => import('@/views/icons/index'),
+      name: 'Icons',
+      meta: { title: 'Icons', icon: 'no-smoking' }
+    }]
   },
   {
     path: "/example",
@@ -63,7 +89,7 @@ export const constantRoutes = [
     redirect: "/example/table",
     meta: {
       title: "Example",
-      icon: "time",
+      icon: "basketball",
     },
     children: [
       {
@@ -72,7 +98,7 @@ export const constantRoutes = [
         component: () => import("@/views/table"),
         meta: {
           title: "Table",
-          icon: "list"
+          icon: "headset"
         }
       },
       {
@@ -81,7 +107,7 @@ export const constantRoutes = [
         component: () => import("@/views/tree"),
         meta: {
           title: "Tree",
-          icon: "flow"
+          icon: "umbrella"
         }
       },
       {
@@ -103,7 +129,7 @@ export const constantRoutes = [
         path: "index",
         name: "Form",
         component: () => import("@/views/form/index"),
-        meta: { title: "Form", icon: "order", affix: true }
+        meta: { title: "Form", icon: "document-checked", affix: true }
       }
     ]
   },
@@ -114,7 +140,7 @@ export const constantRoutes = [
     name: "Nested",
     meta: {
       title: "Nested",
-      icon: "filter"
+      icon: "connection"
     },
     children: [
       {

@@ -49,7 +49,6 @@ export default {
     position: relative;
     overflow: hidden;
     border-bottom: 1px solid #eee;
-    // transition: all .2s linear;
     &:hover {
         .va-todo-delete {
             visibility: visible;
@@ -111,13 +110,6 @@ export default {
         transform: scale(1)
     }
 }
-
-.va-todolist-input {
-    width: 100%;
-    line-height: 24px;
-    padding-left: 40px;
-    box-sizing: border-box;
-}
 .va-todo-delete{
     position: absolute;
     visibility: hidden;
@@ -132,33 +124,6 @@ export default {
     color: #cc9a9a;
     font-size: 26px;
     transition: all .1s linear;
-}
-.va-todolist-item-checkbox {
-    margin: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 30px;
-    height: 30px;
-    background-color: lightblue;
-}
-.va-todolist-item-button {
-    // display: none;
-    visibility: hidden;
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: 0;
-    width: 44px;
-    height: 100%;
-    font-size: 26px;
-    // background: lightgreen;
-    transition: all .2s linear;
-}
-.va-todolist-item-checkbox + label {
-    line-height: 1;
-    display: block;
-    padding: 15px 15px 15px 50px
 }
 
 </style>

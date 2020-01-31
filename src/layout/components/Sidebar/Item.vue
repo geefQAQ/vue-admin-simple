@@ -26,7 +26,7 @@ export default {
     const { icon, title } = context.props;
     const vnodes = [];
     const iconEle = createElement("i", {
-      class: "va-icon va-icon__" + icon
+      class: "el-icon-" + icon
     });
 
     if (icon) {
