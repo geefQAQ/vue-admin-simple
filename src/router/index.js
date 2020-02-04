@@ -81,6 +81,41 @@ export const constantRoutes = [
       meta: { title: 'Icons', icon: 'no-smoking' }
     }]
   },
+
+  {
+    path: '/components',
+    component: Layout,
+    redirect: '/components/tinymce',
+    name: 'Components',
+    meta: { title: 'Components', icon: 'menu' },
+    children: [
+      {
+        path: 'tinymce',
+        component: () => import('@/views/components-demo/tinymce'),
+        name: 'Tinymce',
+        meta: { title: 'Tinymce' }
+      },
+      {
+        path: 'markdown',
+        component: () => import('@/views/components-demo/markdown'),
+        name: 'Markdown',
+        meta: { title: 'Markdown' }
+      },
+      {
+        path: 'back-to-top',
+        component: () => import('@/views/components-demo/back-to-top'),
+        name: 'BackToTopDemo',
+        meta: { title: 'Back To Top' }
+      },
+      {
+        path: 'drag-select',
+        component: () => import('@/views/components-demo/drag-select'),
+        name: 'DragSelectDemo',
+        meta: { title: 'Drag Select' }
+      }
+    ]
+  },
+
   {
     path: "/example",
     component: Layout,

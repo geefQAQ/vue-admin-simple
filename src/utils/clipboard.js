@@ -19,7 +19,7 @@ function clipboardError () {
 
 function handleClipboard(text, event) {
     // 点击第一次时会打印，但是不会触发on事件
-    console.log('clip', text, event)
+    // console.log('clip', text, event)
     const clipboard = new Clipboard(event.target, {
         text: () => text
     })

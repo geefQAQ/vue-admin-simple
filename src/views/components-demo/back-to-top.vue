@@ -1,0 +1,94 @@
+<template>
+    <div class="va-app-container">
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <div>placeholder</div>
+        <back-to-top />
+    </div>
+</template>
+<script>
+import BackToTop from '@/components/BackToTop'
+export default {
+    name: 'BackToTopDemo',
+    components: {
+        BackToTop
+    }
+}
+</script>
