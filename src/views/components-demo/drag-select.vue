@@ -2,9 +2,7 @@
 <div class="va-app-container">
     <!-- v-model的value是找到相应value的option的label -->
     <drag-select v-model="value" multiple placeholder="请选择" class="va-drag-select">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-
-        </el-option>
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </drag-select>
     <div>
         <el-tag v-for="item in value" :key="item" style="margin-right: 10px;">

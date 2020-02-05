@@ -112,6 +112,12 @@ export const constantRoutes = [
         component: () => import('@/views/components-demo/drag-select'),
         name: 'DragSelectDemo',
         meta: { title: 'Drag Select' }
+      },
+      {
+        path: 'drag-dialog',
+        component: () => import('@/views/components-demo/drag-dialog'),
+        name: 'DragDialogDemo',
+        meta: { title: 'Drag Dialog' }
       }
     ]
   },

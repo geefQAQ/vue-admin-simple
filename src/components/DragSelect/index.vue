@@ -65,8 +65,8 @@ export default {
 <style scoped>
 /* vue引用了第三方组件，需要在组件中局部修改第三方组件的样式，而又不想去除scoped属性造成组件之间的样式污染。此时只能通过>>>，穿透scoped。 */
 /* 有些Sass 之类的预处理器无法正确解析 >>>。可以使用 /deep/ 操作符( >>> 的别名) */
-/* .va-drag-select >>> .sortable-ghost { */
-/deep/ .sortable-ghost { 
+.va-drag-select >>> .sortable-ghost {
+/* /deep/ .sortable-ghost {  */
   opacity: .8;
   color: #fff!important;
   background: #42b983!important;
