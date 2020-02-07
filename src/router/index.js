@@ -114,6 +114,12 @@ export const constantRoutes = [
         meta: { title: 'Drag Select' }
       },
       {
+        path: 'drag-schedule',
+        component: () => import('@/views/components-demo/drag-schedule'),
+        name: 'DragScheduleDemo',
+        meta: { title: 'Drag Schedule' }
+      },
+      {
         path: 'drag-dialog',
         component: () => import('@/views/components-demo/drag-dialog'),
         name: 'DragDialogDemo',

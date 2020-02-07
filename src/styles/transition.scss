@@ -62,3 +62,7 @@
     opacity: 0;
     transform: translateX(30px);
 }
+// flip-list
+.flip-list-move {
+    transition: transform 0.5s;
+}
