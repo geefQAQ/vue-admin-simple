@@ -77,6 +77,15 @@ aside {
         height: 0;
     }
 }
+// 可打开对话框的数字样式
+.va-link-type,
+.va-link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+  &:hover {
+    color: rgb(32, 160, 255);
+  }
+}
 
 // 全局样式
 .va-app-container {

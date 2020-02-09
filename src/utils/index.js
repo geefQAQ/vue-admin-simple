@@ -1,4 +1,19 @@
 /**
+ * 
+ * @param {*} url 
+ */
+
+ export function parseTime(time, cFormat) {
+    // 健壮性
+    if(arguments.length === 0) {
+        return null
+    }
+    // 默认参数
+    const format = cFormat || '{y}-{m}-{d} {h}:{m}:{s}'
+    
+ }
+
+/**
  * URL参数转换为对象
  * @param {string} url
  * @returns {Object}

@@ -81,7 +81,7 @@ export const constantRoutes = [
       meta: { title: 'Icons', icon: 'no-smoking' }
     }]
   },
-
+  // 组件demo
   {
     path: '/components',
     component: Layout,
@@ -100,6 +100,12 @@ export const constantRoutes = [
         component: () => import('@/views/components-demo/markdown'),
         name: 'Markdown',
         meta: { title: 'Markdown' }
+      },
+      {
+        path: 'dropzone',
+        component: () => import('@/views/components-demo/dropzone'),
+        name: 'DropzoneDemo',
+        meta: { title: 'Dropzone' }
       },
       {
         path: 'back-to-top',
@@ -130,10 +136,37 @@ export const constantRoutes = [
         component: () => import('@/views/components-demo/sticky'),
         name: 'StickyDemo',
         meta: { title: 'Sticky' }
+      },
+      {
+        path: 'upload',
+        component: () => import('@/views/components-demo/upload'),
+        name: 'UploadDemo',
+        meta: { title: 'Upload' }
       }
     ]
   },
-
+  // 表格
+  {
+    path: '/table',
+    component: Layout,
+    name: 'Table',
+    redirect: '/table/complex-table',
+    meta:{ title: 'Table', icon: 's-grid' },
+    children: [
+      {
+        path: 'complex-table',
+        name: 'ComplexTableName',
+        component: () => import('@/views/table/complex-table'),
+        meta: {title: 'Complex Table'},
+      },
+      {
+        path: 'drag-table',
+        name: 'DragTable',
+        component: () => import('@/views/table/drag-table'),
+        meta: {title: 'Drag Table'},
+      }
+    ]
+  },
   {
     path: "/example",
     component: Layout,
@@ -147,17 +180,17 @@ export const constantRoutes = [
     children: [
       {
         path: "table",
-        name: "Table",
-        component: () => import("@/views/table"),
+        name: "ExampleTable",
+        component: () => import("@/views/example/table"),
         meta: {
-          title: "Table",
+          title: "Example Table",
           icon: "headset"
         }
       },
       {
         path: "tree",
         name: "Tree",
-        component: () => import("@/views/tree"),
+        component: () => import("@/views/example/tree"),
         meta: {
           title: "Tree",
           icon: "umbrella"
