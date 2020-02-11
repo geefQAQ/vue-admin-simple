@@ -99,7 +99,8 @@ export default {
     height: 100vh;
     background-color: #fff;
     transform: translateX(100%);
-    z-index: 20;
+    // 没办法，v-loading的z-index是2000
+    z-index: 3000;
     transition: transform .3s cubic-bezier(.7, .3, .1, 1)
     // &.showPanel {
     //     transform: translateX(0)

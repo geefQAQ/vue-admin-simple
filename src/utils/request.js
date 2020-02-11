@@ -39,11 +39,11 @@ service.interceptors.response.use(
         //     cancelButtonText: '取消',
         //     type: 'success'
         // })
-        Message({
-            message: '登录成功',
-            type: 'success',
-            duration: 3 * 1000
-        })
+        // Message({
+        //     message: '登录成功',
+        //     type: 'success',
+        //     duration: 3 * 1000
+        // })
         // console.log('axios-response: ', res)
         return res
     },

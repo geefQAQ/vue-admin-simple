@@ -9,8 +9,26 @@
         return null
     }
     // 默认参数
-    const format = cFormat || '{y}-{m}-{d} {h}:{m}:{s}'
-    
+    const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+    const date = new Date(+time)
+    const formatObj = {
+        y: date.getFullYear(),
+        m: date.getMonth() + 1,
+        d: date.getDate(),
+        h: date.getHours(),
+        // 分钟只能用i来避免重复了
+        i: date.getMinutes(),
+        s: date.getSeconds(),
+        a: date.getDay()
+    }
+    // console.log('format', format)
+    const reg = /{([ymdhis])+}/g
+    const time_str = format.replace(reg, (r, key) => {
+        // console.log('reg', r, key)
+        const value = formatObj[key]
+        return value.toString()
+    })
+    return time_str
  }
 
 /**
