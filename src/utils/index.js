@@ -21,12 +21,10 @@
         s: date.getSeconds(),
         a: date.getDay()
     }
-    // console.log('format', format)
     const reg = /{([ymdhis])+}/g
     const time_str = format.replace(reg, (r, key) => {
-        // console.log('reg', r, key)
         const value = formatObj[key]
-        return value.toString()
+        return value.toString().padStart(2, '0') // padStart，相当于补全，1 => 01
     })
     return time_str
  }

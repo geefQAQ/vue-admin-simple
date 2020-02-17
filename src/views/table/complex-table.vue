@@ -8,18 +8,30 @@
             <el-select v-model="filterData.region" placeholder="地区" clearable style="width: 150px; margin-right: 5px;">
                 <el-option v-for="(item, index) in regions" :key="index" :label="item.label" :value="item.value" />
             </el-select>
-            <el-button @click="fetchData" type="primary">搜索</el-button>
+            <el-select v-model="filterData.sort" @change="fetchData" style="width: 90px; margin-right: 5px;">
+                <el-option v-for="(item, index) in sortOptions" :key="index" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button @click="fetchData" class="va-button-search" type="primary">
+                <i class="el-icon-search" />搜索
+            </el-button>
+            <el-button @click="handleCreateClick" class="va-button-create" type="primary">
+                <i class="el-icon-edit" />创建
+            </el-button>
+            <el-button @click="handleDownload" class="va-button-export" type="primary">
+                <i class="el-icon-download" />导出
+            </el-button>
         </div>
         <el-table
             :data="list"
             v-loading="listLoading"
             border
             fit
+            highlight-current-row
             @sort-change="sortChange"
         >
-            <el-table-column sortable align="center" prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column :class-name="getSortClass()" sortable="custom" align="center" prop="id" label="ID" width="80"></el-table-column>
 
-            <el-table-column prop="date" label="日期" width="150">
+            <el-table-column prop="date" align="center" label="日期" width="150">
                 <template slot-scope="{row}">
                     <span>{{ row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
                 </template>
@@ -32,17 +44,17 @@
                 </template>
             </el-table-column>
 
-            <el-table-column prop="author" label="作者"></el-table-column>
+            <el-table-column prop="author" label="作者" width="80"></el-table-column>
 
-            <el-table-column prop="imp" label="级别" width="150">
+            <el-table-column prop="imp" label="级别" width="100">
                 <template slot-scope="{row}">
-                    <span style="font-size: 22px;" v-for="(item, index) in row.imp" :key="index">
-                        <i class=el-icon-star-on />
+                    <span class="va-icon-imp-con" v-for="(item, index) in row.imp" :key="index">
+                        <i class="el-icon-star-on" />
                     </span>
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" prop="readings" label="阅读数" width="150">
+            <el-table-column align="center" prop="readings" label="阅读数" width="100">
                 <template slot-scope="{row}">
                     <span class="va-link-type" @click="handleReadingsDialog(row.readings)">{{clacReadings(row.readings)}}</span>
                 </template>
@@ -83,8 +95,25 @@
                     <el-button v-if="row.status !== '删除'" @click="row.status = '删除'" class="va-table-button" type="danger" size='mini'>删除</el-button>
                 </template>
             </el-table-column>
-
         </el-table>
+
+        <!-- 分页 -->
+        <!-- <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="filterData.currentPage"
+            :page-sizes="[5, 10, 20, 30]"
+            layout="total, sizes, prev, pager, next, jumper"
+            style="margin-top: 20px;"
+            :total="total">
+        </el-pagination> -->
+        <pagination 
+            :total="total" 
+            :page.sync="filterData.currentPage"
+            :limit.sync="filterData.pageSize"
+            @pagination="fetchData"
+        />
+        
         <el-dialog title="阅读数" :visible.sync="readingsDialogVisible">
             <el-table :data="pvData" border>
                 <el-table-column prop="key" label="设备"></el-table-column>
@@ -100,7 +129,7 @@
                 <el-form-item label="标题" prop="title">
                     <el-input v-model="temp.title"></el-input>
                 </el-form-item>
-                <el-form-item label="区域">
+                <el-form-item label="区域" prop="region">
                     <el-select v-model="temp.region">
                         <el-option v-for="(item, index) in regions" :key="index" :label="item.label" :value="item.value"></el-option>
                     </el-select>
@@ -109,12 +138,12 @@
                     <!-- 注意，date组件绑定的是数值型的date -->
                     <el-date-picker type="datetime" v-model="temp.date" />
                 </el-form-item>
-                <el-form-item label="状态">
+                <el-form-item label="状态" prop="status">
                     <el-select v-model="temp.status">
                         <el-option v-for="(item, index) in status" :key="index" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="重要性">
+                <el-form-item label="重要性" prop="imp">
                     <el-rate
                         v-model="temp.imp"
                         :max="3"
@@ -128,14 +157,16 @@
             </el-form>
             <span slot="footer" style="text-align: right;">
                 <el-button plain @click="editDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="handleEditConfirm">确认</el-button>
+                <el-button type="primary" @click="handleDialogConfirm">确认</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
-import { getComplexList, updateArticle } from '@/api/article'
+import { getComplexList, updateArticle, createArticle } from '@/api/article'
 import { parseTime } from '@/utils'
+import Pagination from '@/components/Pagination'
+
 const statusType = {
     '发布': 'success',
     '草稿': 'info',
@@ -143,9 +174,13 @@ const statusType = {
 }
    
 export default {
+    components: {
+        Pagination
+    },
     data() {
         return {
             list: null,
+            total: 0,
             listLoading: true,
             pvData: [],
             readingsDialogVisible: false,
@@ -164,6 +199,10 @@ export default {
                 { label: '发布', value: '发布' },
                 { label: '删除', value: '删除' },
             ],
+            sortOptions: [
+                { label: 'ID升序', value: 'asc_id' },
+                { label: 'ID降序', value: 'des_id' },
+            ],
             // temp
             temp: {
                 title: '',
@@ -175,14 +214,27 @@ export default {
             // form rules
             rules: {
                 title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+                region: [{ required: true, message: '请选择地区', tigger: 'change'}],
+                // imp的校验不起作用
+                // imp: [{ required: true, message: '请选择重要性', trigger: 'chagne' }],
+                status: [{ required: true, message: '请选择状态', trigger: 'change' }],
                 date: [{ type:'date', required: true, message: '请选择时间', trigger: 'change' }]
             },
             filterData: {
                 title: '',
                 importance: null,
-                region: ''
+                region: '',
+                sort: 'asc_id',
+                // 分页
+                currentPage: 1,
+                pageSize: 10,
             },
-            importantOptions: [1, 2, 3]
+            importantOptions: [1, 2, 3],
+            // 对话框状态
+            dialogStatus: 'update',
+            // 分页
+            // currentPage: null,
+            // pageSize: 0
         }
     },
     // 监听一个对象值的变化
@@ -203,25 +255,63 @@ export default {
     mounted() {
         this.fetchData()
     },
+    computed: {
+        
+    },
     methods: {
+        // 分页
+        handleSizeChange(val) {
+            this.filterData.pageSize = val
+            this.fetchData()
+        },
+        handleCurrentPageChange(val) {
+            this.filterData.currentPage = val
+            this.fetchData()
+        },
+        handleDialogConfirm() {
+            // 需不需要校验，如果数据没有变化，就不请求，这是一个优化吧
+            this.dialogStatus === 'update' ? this.handleEditSubmit() : this.handleCreateSubmit()
+        },
         // handleSearch() {
         //     console.log(this.filterData)
         // },
-        sortChange() {
-
-            // console.log('a', a)
+        // 不同排序不同样式
+        getSortClass() {
+            // 这样处理有bug，当点击+change后，会增加类名而不是替换类名，也就是说两个类名同时存在，
+            // 我想到的解决方法是获取类名，再作处理，有点繁琐，再想想有没有更简单的办法，比如ui组件的属性。先不处理。
+            return this.filterData.sort === 'asc_id' ? 'ascending' : 'descending'
+        },
+        sortChange(p) {
+            // 注意，在select改变sort，并不会触发事件，只有当点击箭头才是触发事件的条件之一，所以要动态改变箭头样式不能在事件监听这里完成，要用ui组件提供的class-name
+            // 参数{prop: 'id', order: 'ascending'}
+            
+            const { prop, order } = p
+            if(prop === 'id') {
+                this.sortById(order)
+            }
+        },
+        sortById(order) {
+            if(order === 'ascending') {
+                this.filterData.sort = 'asc_id'
+            }else {
+                this.filterData.sort = 'des_id'
+            }
+            // console.log('change', this.filterData.sort)
+            this.fetchData()
         },
         fetchData() {
             this.listLoading = true,
+            // console.log('page', this.filterData.currentPage, this.filterData.pageSize)
             // 注意，readings是一个数组，如果是对象形式的话，处理起来会比较麻烦，特别是在table上显示，ui组件上是用数组来实现的。
             getComplexList(this.filterData).then(response => {
                 this.list = response.data.items
+                this.total = response.data.total
             })
 
             // 模拟请求到数据的时间
             setTimeout(() => {
                 this.listLoading = false
-            }, 1.5 * 1000)
+            }, 0.5 * 1000)
         },
         statusType(p) {
             return statusType[p]
@@ -263,16 +353,6 @@ export default {
                     return acc + cur.pv
                 }, 0)
         },
-        // 点击标题和编辑按钮
-        handleClickEdit(row) {
-            // this.temp = item
-            this.temp = Object.assign({}, row) // 复制row数据，不能直接赋值，否则会因为值引用，两个变量都指向同一个数据源，改变哪个都会改变
-            // 注意，1、要改成数值型的date，才能被组件识别
-            // 2、复制数据的时候，date对象会复制为string，所以校验类型的时候会报错，所以要对date进行类型转换
-            // 3、如何整合到assign中呢，或者有没有必要呢
-            this.temp.date = new Date(+this.temp.date)
-            this.editDialogVisible = true
-        },
         // 确认关闭
         // 貌似这个有点问题，点击取消，然后在取消动画消失前再点击空白处，会弹出确认框，所以还是要在取消按钮上添加追加确认的功能
         handleBeforeClose(done) {
@@ -283,30 +363,120 @@ export default {
                 })
                 .catch( _=> {})
         },
+        // 点击标题和编辑按钮
+        handleClickEdit(row) {
+            this.dialogStatus = 'update'
+            // this.temp = item
+            this.temp = Object.assign({}, row) // 复制row数据，不能直接赋值，否则会因为值引用，两个变量都指向同一个数据源，改变哪个都会改变
+            // 注意，1、要改成数值型的date，才能被组件识别
+            // 2、复制数据的时候，date对象会复制为string，所以校验类型的时候会报错，所以要对date进行类型转换
+            // 3、如何整合到assign中呢，或者有没有必要呢
+            this.temp.date = new Date(+this.temp.date)
+            this.editDialogVisible = true
+        },
+        // 重置temp
+        resetTemp() {
+            this.temp = {
+                title: '',
+                region: '',
+                date: new Date(),
+                status: '',
+                remark: '',
+                imp: 1,
+            }
+        },
+        
+        // 创建文章
+        handleCreateClick() {
+            this.dialogStatus = 'create',
+            this.resetTemp();
+            this.editDialogVisible = true
+        },
         // 修改表单确认
-        handleEditConfirm() {
+        handleEditSubmit() {
             this.$refs.dataForm.validate((valid) => {
-                if(!valid) {
-                    return
-                }
+                if(!valid) { return }
                 // 发出post请求
                 updateArticle(this.temp)
-                    .then(res => {
-                        for(let i in this.tableData) {
-                            if(this.tableData[i].id === this.temp.id) {
+                    .then(() => {
+                        for(let i in this.list) {
+                            if(this.list[i].id === this.temp.id) {
                                 // 根据id，找到对应更改的表格项，然后修改表格
-                                this.tableData.splice(i, 1, this.temp)
+                                this.list.splice(i, 1, this.temp)
                             }
                         }
                     })
                     .then(() => {
                         this.editDialogVisible = false
                         this.$notify({
-                            title: '修改成功',
-                            // message: '修改成功',
+                            title: '编辑成功',
                             type: 'success'
                         })
                     })
+            })
+        },
+        handleCreateSubmit() {
+            this.$refs.dataForm.validate(valid => {
+                if(!valid) { return }
+                createArticle(this.temp)
+                    .then(() => {
+                        let item = this.temp
+                        item.id = Math.round(Math.random() * 100) + 1000
+                        item.author = '一个帅逼'
+                        item.readings = [
+                            { key: 'PC', pv: 0 },
+                            { key: 'IOS', pv: 0 },
+                            { key: 'Android', pv: 0 }
+                        ]
+                        this.list.unshift(item)
+                    })
+                    .then(() => {
+                        this.editDialogVisible = false
+                        this.$notify({
+                            title: '创建成功',
+                            type: 'success'
+                        })
+                    })
+                })
+        },
+
+        // 导出excel
+        handleDownload() {
+            
+            // filter用作，处理某个特定数据的格式
+            const filter = ['date', 'author', 'title', 'status', 'region', 'imp']
+            // 根据filter，增加相应的表头
+            const tableHeader = ['时间', '作者', '标题', '状态', '区域', '重要性']
+            const data = this.formatJSON(this.list, filter)
+            // webpack可动态加载模块
+            import('@/vendor/Export2Excel').then(excel => {
+                // 参数excel相当于加载的js文件的export对象的所有内容
+                 
+                //  处理data，增加表头
+                excel.export_json_to_excel({
+                    data,
+                    header: tableHeader,
+                    bookType: 'xlsx',
+                    fileName: '列表',
+                })
+            })
+        },
+
+        // 导出为excel时，把date转换为字符串
+        formatJSON(list, filter) {
+            // map用作遍历数据，然后对每个项进行修改，但不包括增加和删除
+            return list.map(v => {
+                // 这里貌似会有点绕，其实不绕
+                return filter.map(j => {
+                    if(j === 'date') {
+                        // v[j]就是获取每个list的项的key为date的值
+                        // date为时间戳，要解析为字符串
+                        // 注意，不能写成v[j] = parseTime(v[j])，这样会改变this.list，也就是原数组的值，因为这里是值引用，直接返回修改结果就不会改变原数组
+                        return parseTime(v[j])
+                    }  else {
+                        return v[j]
+                    }
+                })
             })
         }
     }
@@ -323,6 +493,20 @@ export default {
 }
 .va-filter-container {
     margin-bottom: 20px;
+}
+.va-button-search, .va-button-create, .va-button-export {
+    padding: 11px 20px;
+    font-weight: bold;
+    margin: 0;
+    margin-right: 5px;
+}
+.el-icon-search, .el-icon-edit, .el-icon-download {
+    vertical-align: middle;
+    margin-right: 8px;
+    font-weight: bold;
+}
+.el-icon-star-on {
+    font-size: 22px;
 }
 </style>
 

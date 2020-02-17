@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 const data = Mock.mock({
-    'items|10': [
+    'items|30': [
         {
             id: "@increment(1)",
             // 找了好久终于知道怎样生成随机时间戳了。。。
@@ -25,9 +25,9 @@ export default [
         url: "/article/list",
         type: "get",
         response: config => {
-            // console.log('config', config)
-            const { title, importance, region } = config.query
-            // console.log('article', title, importance)
+            // 很奇怪，如果sort = '+id'，在这里会自动替换成' id'，原因不明
+            // 定义分页参数的默认值，第1页，每页20条
+            const { title, importance, region, sort, currentPage = 1, pageSize = 20 } = config.query
 
             // filter，筛选掉不符合要求的项
             // 1、filter不会改变原数组，要赋值给新数组
@@ -41,11 +41,19 @@ export default [
                 if(region && item.region !== region) return false
                 return true
             })
+            
+            if(sort === 'des_id') {
+                mockList = mockList.reverse()
+            }
+            // 分页数据
+            const startIndex = (currentPage - 1 )* pageSize
+            const endIndex = currentPage * pageSize
+            let pageList = mockList.slice(startIndex, endIndex)
             return {
                 code: 20000,
                 data: {
                     total: mockList.length,
-                    items: mockList
+                    items: pageList
                 }
             }
         }
@@ -55,11 +63,21 @@ export default [
         url: "/article/update",
         type: "post",
         response: () => {
-          // const items = data.complexTableItems;
           return {
             code: 20000,
             data: 'success'
           }
         }
     },
+    // 创建文章
+    {
+        url: "/article/create",
+        type: "post",
+        response: () => {
+            return {
+                code: 20000,
+                data: 'success'
+            }
+        }
+    }
 ]
