@@ -23,13 +23,14 @@
         </div>
         <el-table
             :data="list"
+            ref="table"
             v-loading="listLoading"
             border
             fit
             highlight-current-row
             @sort-change="sortChange"
         >
-            <el-table-column :class-name="getSortClass()" sortable="custom" align="center" prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column  :sort-orders="['descending', 'ascending']" :class-name="getSortClass()" sortable="custom" align="center" prop="id" label="ID" width="80"></el-table-column>
 
             <el-table-column prop="date" align="center" label="日期" width="150">
                 <template slot-scope="{row}">
@@ -48,15 +49,14 @@
 
             <el-table-column prop="imp" label="级别" width="100">
                 <template slot-scope="{row}">
-                    <span class="va-icon-imp-con" v-for="(item, index) in row.imp" :key="index">
-                        <i class="el-icon-star-on" />
-                    </span>
+                    <!-- v-for可以直接遍历数字，如果imp为3，那么item相应为1，2，3，估计是vue自动转换为[1,2,3]这就很牛批 -->
+                    <i v-for="(item, index) in row.imp" :key="index" class="el-icon-star-on" />
                 </template>
             </el-table-column>
 
             <el-table-column align="center" prop="readings" label="阅读数" width="100">
                 <template slot-scope="{row}">
-                    <span class="va-link-type" @click="handleReadingsDialog(row.readings)">{{clacReadings(row.readings)}}</span>
+                    <span class="va-link-type" @click="handleReadingsDialog(row.readings)">{{calcReadings(row.readings)}}</span>
                 </template>
             </el-table-column>
 
@@ -66,7 +66,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="动作" width="240">
+            <el-table-column align="center" label="动作" width="240">
                 <!-- 这是我的做法，只用两个元素，加上一大堆的判断，很麻烦 -->
                 <!-- <template slot-scope="scope">
                     <el-tag
@@ -125,7 +125,7 @@
         </el-dialog>
 
         <el-dialog :visible.sync="editDialogVisible" :before-close="handleBeforeClose">
-            <el-form ref="dataForm" :model="temp" :rules="rules" label-width="80px" style="width: 400px;">
+            <el-form v-loading="dialogLoading" ref="dataForm" :model="temp" :rules="rules" label-width="80px" class="va-dialog-form">
                 <el-form-item label="标题" prop="title">
                     <el-input v-model="temp.title"></el-input>
                 </el-form-item>
@@ -156,7 +156,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" style="text-align: right;">
-                <el-button plain @click="editDialogVisible = false">取消</el-button>
+                <!-- <el-button plain @click="editDialogVisible = false">取消</el-button> -->
+                <el-button plain @click="handleBeforeClose">取消</el-button>
                 <el-button type="primary" @click="handleDialogConfirm">确认</el-button>
             </span>
         </el-dialog>
@@ -182,6 +183,7 @@ export default {
             list: null,
             total: 0,
             listLoading: true,
+            dialogLoading: false,
             pvData: [],
             readingsDialogVisible: false,
             editDialogVisible: false,
@@ -200,8 +202,8 @@ export default {
                 { label: '删除', value: '删除' },
             ],
             sortOptions: [
-                { label: 'ID升序', value: 'asc_id' },
-                { label: 'ID降序', value: 'des_id' },
+                { label: 'ID升序', value: 'ascending' },
+                { label: 'ID降序', value: 'descending' },
             ],
             // temp
             temp: {
@@ -215,8 +217,8 @@ export default {
             rules: {
                 title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
                 region: [{ required: true, message: '请选择地区', tigger: 'change'}],
-                // imp的校验不起作用
-                // imp: [{ required: true, message: '请选择重要性', trigger: 'chagne' }],
+                // imp的校验不起作用？ 答：起作用啊，只不过好像还有点问题
+                imp: [{ required: true, message: '请选择重要性', trigger: 'chagne' }],
                 status: [{ required: true, message: '请选择状态', trigger: 'change' }],
                 date: [{ type:'date', required: true, message: '请选择时间', trigger: 'change' }]
             },
@@ -224,7 +226,7 @@ export default {
                 title: '',
                 importance: null,
                 region: '',
-                sort: 'asc_id',
+                sort: 'ascending',
                 // 分页
                 currentPage: 1,
                 pageSize: 10,
@@ -232,9 +234,6 @@ export default {
             importantOptions: [1, 2, 3],
             // 对话框状态
             dialogStatus: 'update',
-            // 分页
-            // currentPage: null,
-            // pageSize: 0
         }
     },
     // 监听一个对象值的变化
@@ -252,56 +251,16 @@ export default {
             return parseTime(time, format)
         }
     },
-    mounted() {
+    // 注意，这里是created，而不是用mounted，具体区别看官方文档，可简单理解为，created是html生成前，mounted是后，而且mounted可以update
+    created() {
         this.fetchData()
     },
-    computed: {
-        
-    },
     methods: {
-        // 分页
-        handleSizeChange(val) {
-            this.filterData.pageSize = val
-            this.fetchData()
-        },
-        handleCurrentPageChange(val) {
-            this.filterData.currentPage = val
-            this.fetchData()
-        },
-        handleDialogConfirm() {
-            // 需不需要校验，如果数据没有变化，就不请求，这是一个优化吧
-            this.dialogStatus === 'update' ? this.handleEditSubmit() : this.handleCreateSubmit()
-        },
-        // handleSearch() {
-        //     console.log(this.filterData)
-        // },
-        // 不同排序不同样式
-        getSortClass() {
-            // 这样处理有bug，当点击+change后，会增加类名而不是替换类名，也就是说两个类名同时存在，
-            // 我想到的解决方法是获取类名，再作处理，有点繁琐，再想想有没有更简单的办法，比如ui组件的属性。先不处理。
-            return this.filterData.sort === 'asc_id' ? 'ascending' : 'descending'
-        },
-        sortChange(p) {
-            // 注意，在select改变sort，并不会触发事件，只有当点击箭头才是触发事件的条件之一，所以要动态改变箭头样式不能在事件监听这里完成，要用ui组件提供的class-name
-            // 参数{prop: 'id', order: 'ascending'}
-            
-            const { prop, order } = p
-            if(prop === 'id') {
-                this.sortById(order)
-            }
-        },
-        sortById(order) {
-            if(order === 'ascending') {
-                this.filterData.sort = 'asc_id'
-            }else {
-                this.filterData.sort = 'des_id'
-            }
-            // console.log('change', this.filterData.sort)
-            this.fetchData()
-        },
+        // 请求数据
         fetchData() {
-            this.listLoading = true,
-            // console.log('page', this.filterData.currentPage, this.filterData.pageSize)
+            this.listLoading = true
+            // trim一下title
+            if(this.filterData.title) this.filterData.title = this.filterData.title.trim()
             // 注意，readings是一个数组，如果是对象形式的话，处理起来会比较麻烦，特别是在table上显示，ui组件上是用数组来实现的。
             getComplexList(this.filterData).then(response => {
                 this.list = response.data.items
@@ -313,8 +272,142 @@ export default {
                 this.listLoading = false
             }, 0.5 * 1000)
         },
+        // 点击ID小箭头
+        sortChange(p) {
+            // 注意，在select改变sort，并不会触发事件，只有当点击箭头才是触发事件的条件之一，所以要动态改变箭头样式不能在事件监听这里完成，要用ui组件提供的class-name
+            // 参数{prop: 'id', order: 'ascending'}
+            let { prop, order } = p
+            if(prop === 'id') {
+                if(order === 'ascending') { this.filterData.sort = 'ascending' }
+                else if(order === 'descending') {this.filterData.sort = 'descending' }
+                this.fetchData()
+            }
+        },
+        // 根据排序改变箭头样式(初始化箭头样式)
+        getSortClass() {
+            // 这样处理有bug，当点击+change后，会增加类名而不是替换类名，也就是说两个类名同时存在，
+            // th元素为该列的第一个元素，div元素为子元素，在改变class-name时，会在th上增加，在div上改变，点箭头，再按选择，会让th增加
+            // 我想到的解决方法是获取类名，再作处理，有点繁琐，再想想有没有更简单的办法，比如ui组件的属性。先不处理。
+            // 各种方式都试过都不行，因为sort-change是增加ascending/descending，但并不是通过class-name增加，ui在class-name中应该是替换，而不是增加，table是高度处理过的组件，很难再独立处理一个单元格。
+            return this.filterData.sort === 'ascending' ? 'ascending' : 'descending'
+        },
+        // 状态样式
         statusType(p) {
             return statusType[p]
+        },
+
+        // 点击标题和编辑按钮
+        handleClickEdit(row) {
+            this.dialogStatus = 'update'
+            // this.temp = item
+            this.temp = Object.assign({}, row) // 复制row数据，不能直接赋值，否则会因为值引用，两个变量都指向同一个数据源，改变哪个都会改变
+            // 注意，1、要改成数值型的date，才能被组件识别
+            // 2、复制数据的时候，date对象会复制为string，所以校验类型的时候会报错，所以要对date进行类型转换
+            // 3、如何整合到assign中呢，或者有没有必要呢? 答：没必要，也没必要一定转换成date，数字也可以，ui组件会识别并转换
+            // this.temp.date = new Date(+this.temp.date)
+            this.temp.date = +this.temp.date
+            this.editDialogVisible = true
+        },
+        // 创建文章
+        handleCreateClick() {
+            this.dialogStatus = 'create',
+            this.resetTemp();
+            this.editDialogVisible = true
+        },
+        // 重置temp
+        resetTemp() {
+            this.temp = {
+                title: '',
+                region: '',
+                date: '',
+                status: '',
+                remark: '',
+                imp: null,
+            }
+        },
+        // 修改表单确认
+        handleEditSubmit() {
+            this.dialogLoading = true
+            this.$refs.dataForm.validate((valid) => {
+                if(!valid) { return }
+                // 发出post请求
+                updateArticle(this.temp)
+                    .then(res => {
+                        // 模拟请求延迟
+                        for(let i in this.list) {
+                            if(this.list[i].id === this.temp.id) {
+                                // 根据id，找到对应更改的表格项，然后修改表格
+                                this.list.splice(i, 1, this.temp) // 删除i元素开始，长度为1的个数，然后用this.temp换上
+                            }
+                        }
+                        setTimeout(() => {
+                            this.dialogLoading = false
+                            this.editDialogVisible = false
+                            this.$notify({
+                                title: `${res.data}`,
+                                type: 'success'
+                            })
+                        }, 1000)
+                    })
+            })
+        },
+        handleCreateSubmit() {
+            this.$refs.dataForm.validate(valid => {
+                if(!valid) { return }
+                createArticle(this.temp)
+                    .then(res => {
+                        let item = this.temp
+                        item.id = Math.round(Math.random() * 100) + 1000
+                        item.author = '一个帅逼'
+                        item.readings = [
+                            { key: 'PC', pv: 0 },
+                            { key: 'IOS', pv: 0 },
+                            { key: 'Android', pv: 0 }
+                        ]
+                        this.list.unshift(item)
+                        this.editDialogVisible = false
+                        this.$notify({
+                            title: `${res.data}`,
+                            type: 'success'
+                        })
+                    })
+                })
+        },
+        
+        handleDialogConfirm() {
+            // 需不需要校验，如果数据没有变化，就不请求，这是一个优化吧
+            this.dialogStatus === 'update' ? this.handleEditSubmit() : this.handleCreateSubmit()
+        },
+        // 确认关闭
+        // 貌似这个有点问题，点击取消，然后在取消动画消失前再点击空白处，会弹出确认框，所以还是要在取消按钮上添加追加确认的功能
+        handleBeforeClose(done) {
+            // 为什么在button 上绑定这个函数时，不能正常运行? 答：在done()之前改变editDialogVisible就可以了
+            this.$confirm('修改内容未被保存，确认关闭？')
+                .then(() => {
+                    this.editDialogVisible = false
+                    done()
+                })
+                .catch(() => {})
+        },
+
+         // 计算总阅读数
+        calcReadings(r) {
+            // 这是最简单容易理解的写法
+            // let re = 0
+            // for(let i of r) {
+            //     re = re + i.pv
+            // }
+            // return re
+
+            // reduce写法
+            // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+            // 先根据条件过滤掉不需要加入计算的元素
+            // 然后通过reduce进行累加
+            return r
+                .filter(i => i.key !== 'Mobile')
+                .reduce((acc, cur) => {
+                    return acc + cur.pv
+                }, 0)
         },
         handleReadingsDialog(r) {
             this.readingsDialogVisible = true
@@ -334,112 +427,7 @@ export default {
                 this.pvData.push({key: 'Mobile', pv: mobile})
             }
         },
-        // 计算总阅读数
-        clacReadings(r) {
-            // 这是最简单容易理解的写法
-            // let re = 0
-            // for(let i of r) {
-            //     re = re + i.pv
-            // }
-            // return re
-
-            // reduce写法
-            // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-            // 先根据条件过滤掉不需要加入计算的元素
-            // 然后通过reduce进行累加
-            return r
-                .filter(i => i.key !== 'Mobile')
-                .reduce((acc, cur) => {
-                    return acc + cur.pv
-                }, 0)
-        },
-        // 确认关闭
-        // 貌似这个有点问题，点击取消，然后在取消动画消失前再点击空白处，会弹出确认框，所以还是要在取消按钮上添加追加确认的功能
-        handleBeforeClose(done) {
-            // 为什么在button 上绑定这个函数时，不能正常运行
-            this.$confirm('确认关闭？')
-                .then( _ => {
-                    done()
-                })
-                .catch( _=> {})
-        },
-        // 点击标题和编辑按钮
-        handleClickEdit(row) {
-            this.dialogStatus = 'update'
-            // this.temp = item
-            this.temp = Object.assign({}, row) // 复制row数据，不能直接赋值，否则会因为值引用，两个变量都指向同一个数据源，改变哪个都会改变
-            // 注意，1、要改成数值型的date，才能被组件识别
-            // 2、复制数据的时候，date对象会复制为string，所以校验类型的时候会报错，所以要对date进行类型转换
-            // 3、如何整合到assign中呢，或者有没有必要呢
-            this.temp.date = new Date(+this.temp.date)
-            this.editDialogVisible = true
-        },
-        // 重置temp
-        resetTemp() {
-            this.temp = {
-                title: '',
-                region: '',
-                date: new Date(),
-                status: '',
-                remark: '',
-                imp: 1,
-            }
-        },
-        
-        // 创建文章
-        handleCreateClick() {
-            this.dialogStatus = 'create',
-            this.resetTemp();
-            this.editDialogVisible = true
-        },
-        // 修改表单确认
-        handleEditSubmit() {
-            this.$refs.dataForm.validate((valid) => {
-                if(!valid) { return }
-                // 发出post请求
-                updateArticle(this.temp)
-                    .then(() => {
-                        for(let i in this.list) {
-                            if(this.list[i].id === this.temp.id) {
-                                // 根据id，找到对应更改的表格项，然后修改表格
-                                this.list.splice(i, 1, this.temp)
-                            }
-                        }
-                    })
-                    .then(() => {
-                        this.editDialogVisible = false
-                        this.$notify({
-                            title: '编辑成功',
-                            type: 'success'
-                        })
-                    })
-            })
-        },
-        handleCreateSubmit() {
-            this.$refs.dataForm.validate(valid => {
-                if(!valid) { return }
-                createArticle(this.temp)
-                    .then(() => {
-                        let item = this.temp
-                        item.id = Math.round(Math.random() * 100) + 1000
-                        item.author = '一个帅逼'
-                        item.readings = [
-                            { key: 'PC', pv: 0 },
-                            { key: 'IOS', pv: 0 },
-                            { key: 'Android', pv: 0 }
-                        ]
-                        this.list.unshift(item)
-                    })
-                    .then(() => {
-                        this.editDialogVisible = false
-                        this.$notify({
-                            title: '创建成功',
-                            type: 'success'
-                        })
-                    })
-                })
-        },
-
+       
         // 导出excel
         handleDownload() {
             
@@ -478,7 +466,17 @@ export default {
                     }
                 })
             })
-        }
+        },
+
+         // 分页
+        handleSizeChange(val) {
+            this.filterData.pageSize = val
+            this.fetchData()
+        },
+        handleCurrentPageChange(val) {
+            this.filterData.currentPage = val
+            this.fetchData()
+        },
     }
 }
 </script>
@@ -507,6 +505,12 @@ export default {
 }
 .el-icon-star-on {
     font-size: 22px;
+}
+// 样式让loading在表单中居中
+.va-dialog-form {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 400px;
 }
 </style>
 

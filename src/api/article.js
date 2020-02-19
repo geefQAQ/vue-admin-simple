@@ -4,7 +4,7 @@ export function getComplexList (query) {
     return request({
         url: '/article/list',
         method: 'get',
-        params: query // axios 接收参数要用params
+        params: query // axios 接收参数要用params，这里接收的参数是filterData
     })
 }
 export function updateArticle (data) {
