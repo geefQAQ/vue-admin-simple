@@ -164,6 +164,12 @@ export const constantRoutes = [
         name: 'DragTable',
         component: () => import('@/views/table/drag-table'),
         meta: {title: 'Drag Table'},
+      },
+      {
+        path: 'inline-edit',
+        name: 'InlineEdit',
+        component: () => import('@/views/table/inline-edit'),
+        meta: {title: 'Inline Edit'}
       }
     ]
   },
