@@ -168,8 +168,14 @@ export const constantRoutes = [
       {
         path: 'inline-edit',
         name: 'InlineEdit',
-        component: () => import('@/views/table/inline-edit'),
+        component: () => import('@/views/table/inline-edit-table'),
         meta: {title: 'Inline Edit'}
+      },
+      {
+        path: 'dynamic-table',
+        name: 'DynamicTable',
+        component: () => import('@/views/table/dynamic-table/index'), // 注意要添加路径/index，不添加会自动加载为xxx.vue
+        meta: {title: 'Dynamic Table'}
       }
     ]
   },

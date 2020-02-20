@@ -7,7 +7,7 @@ for(let i = 0; i < count; i++) {
         id: "@increment(1)",
         // 找了好久终于知道怎样生成随机时间戳了。。。
         date: "@datetime('T')",
-        title: "@sentence(2, 7)",
+        title: "@csentence(7, 17)",
         author: "@cname",
         imp: "@integer(1,3)",
         readings: [
