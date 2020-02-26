@@ -1,21 +1,19 @@
 <template>
     <div>
         <!-- 参考 https://github.com/Inspiration1/asteroid/blob/master/src/components/tinymce-editor/tinymce-editor.vue -->
-        <aside>
-            <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/zh/feature/component/rich-editor.html#%E5%B8%B8%E8%A7%81%E5%AF%8C%E6%96%87%E6%9C%AC" >链接</a>
-            先埋一个坑，需要时再回来看看。
-        </aside>
-        <editor
+        <editor ref="tinymce"
             api-key="9b5rtor8j75t6fcvxkc4n0x7juyzfvpmgs7ddzoc5xys9ttt"
             :init="{
-                height: 300,
+                height: 400,
                 language_url: `/tinymce/langs/zh_CN.js`,
                 language: 'zh_CN',
                 plugins: plugins,
                 toolbar: toolbar,
                 menubar: 'file edit view format tools help',
-                initial_value: 'test'
             }"
+            model-events = "change keyup undo redo"
+            @input="handleInput"
+            :value="value"
         />
     </div>
 </template>
@@ -28,17 +26,30 @@ export default {
     components: {
         Editor
     },
+    props: {
+        value: String,
+    },
     data() {
         return {
             // publicPath: process.env.BASE_URL
             plugins: plugins,
-            toolbar: toolbar
+            toolbar: toolbar,
+            content: this.value
         }
     },
-    // methods: {
-    //     init() {
+    methods: {
+        // value要分清楚属性和组件自身的value，名一样，但是必须要赋值才能有值
+        handleInput(val) {
+            this.$emit('input', val)
 
+        },
+    },
+    // watch: {
+    //     // 父组件v-model传的是value属性，如果这里不作赋值content=this.value，
+    //     // 就取不到初始值，至于为什么要v-model，因为@input事件不足够好，触发频率比较高，v-model相当于经过处理的input事件，暂时没发现v-model有什么副作用
+    //     content(val) {
+    //         this.$emit('input', val)
     //     }
-    // }
+    // },
 }
 </script>

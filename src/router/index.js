@@ -6,6 +6,10 @@ Vue.use(Router);
 /* Layout */
 import Layout from "@/layout";
 
+/* Modules */
+import tableRoutes from './modules/table' 
+import componentsRoutes from './modules/components' 
+import nestedRouts from './modules/nested' 
 /**
  * Note: 子菜单只显示于该路由的子路由长度 >= 1
  *
@@ -82,100 +86,28 @@ export const constantRoutes = [
     }]
   },
   // 组件demo
-  {
-    path: '/components',
-    component: Layout,
-    redirect: '/components/tinymce',
-    name: 'Components',
-    meta: { title: 'Components', icon: 'menu' },
-    children: [
-      {
-        path: 'tinymce',
-        component: () => import('@/views/components-demo/tinymce'),
-        name: 'Tinymce',
-        meta: { title: 'Tinymce' }
-      },
-      {
-        path: 'markdown',
-        component: () => import('@/views/components-demo/markdown'),
-        name: 'Markdown',
-        meta: { title: 'Markdown' }
-      },
-      {
-        path: 'dropzone',
-        component: () => import('@/views/components-demo/dropzone'),
-        name: 'DropzoneDemo',
-        meta: { title: 'Dropzone' }
-      },
-      {
-        path: 'back-to-top',
-        component: () => import('@/views/components-demo/back-to-top'),
-        name: 'BackToTopDemo',
-        meta: { title: 'Back To Top' }
-      },
-      {
-        path: 'drag-select',
-        component: () => import('@/views/components-demo/drag-select'),
-        name: 'DragSelectDemo',
-        meta: { title: 'Drag Select' }
-      },
-      {
-        path: 'drag-schedule',
-        component: () => import('@/views/components-demo/drag-schedule'),
-        name: 'DragScheduleDemo',
-        meta: { title: 'Drag Schedule' }
-      },
-      {
-        path: 'drag-dialog',
-        component: () => import('@/views/components-demo/drag-dialog'),
-        name: 'DragDialogDemo',
-        meta: { title: 'Drag Dialog' }
-      },
-      {
-        path: 'sticky',
-        component: () => import('@/views/components-demo/sticky'),
-        name: 'StickyDemo',
-        meta: { title: 'Sticky' }
-      },
-      {
-        path: 'upload',
-        component: () => import('@/views/components-demo/upload'),
-        name: 'UploadDemo',
-        meta: { title: 'Upload' }
-      }
-    ]
-  },
+  componentsRoutes,
   // 表格
+  tableRoutes,
+  // 编辑文章
   {
-    path: '/table',
+    path: '/article',
     component: Layout,
-    name: 'Table',
-    redirect: '/table/complex-table',
-    meta:{ title: 'Table', icon: 's-grid' },
+    name: 'Article',
+    redirect: '/article/create-article',
+    meta: { title: 'Article', icon: 'toilet-paper' },
     children: [
       {
-        path: 'complex-table',
-        name: 'ComplexTableName',
-        component: () => import('@/views/table/complex-table'),
-        meta: {title: 'Complex Table'},
+        path: '/create-article',
+        component: () => import('@/views/article/create-article'),
+        name: 'CreateArticle',
+        meta: { title: 'Create Article', icon: 'milk-tea' }
       },
       {
-        path: 'drag-table',
-        name: 'DragTable',
-        component: () => import('@/views/table/drag-table'),
-        meta: {title: 'Drag Table'},
-      },
-      {
-        path: 'inline-edit',
-        name: 'InlineEdit',
-        component: () => import('@/views/table/inline-edit-table'),
-        meta: {title: 'Inline Edit'}
-      },
-      {
-        path: 'dynamic-table',
-        name: 'DynamicTable',
-        component: () => import('@/views/table/dynamic-table/index'), // 注意要添加路径/index，不添加会自动加载为xxx.vue
-        meta: {title: 'Dynamic Table'}
+        path: '/article-list',
+        component: () => import('@/views/article/article-list'),
+        name: 'ArticleList',
+        meta: { title: 'Article List', icon: 'burger' }
       }
     ]
   },
@@ -231,66 +163,8 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: "/nested",
-    component: Layout,
-    redirect: "/nested/menu1",
-    name: "Nested",
-    meta: {
-      title: "Nested",
-      icon: "connection"
-    },
-    children: [
-      {
-        path: "menu1",
-        component: () => import("@/views/nested/menu1/index"), // Parent router-view
-        name: "Menu1",
-        meta: { title: "Menu1" },
-        children: [
-          {
-            path: "menu1-1",
-            component: () => import("@/views/nested/menu1/menu1-1"),
-            name: "Menu1-1",
-            meta: { title: "Menu1-1" }
-          },
-          {
-            path: "menu1-2",
-            component: () => import("@/views/nested/menu1/menu1-2"),
-            name: "Menu1-2",
-            meta: { title: "Menu1-2" },
-            children: [
-              {
-                path: "menu1-2-1",
-                component: () =>
-                  import("@/views/nested/menu1/menu1-2/menu1-2-1"),
-                name: "Menu1-2-1",
-                meta: { title: "Menu1-2-1" }
-              },
-              {
-                path: "menu1-2-2",
-                component: () =>
-                  import("@/views/nested/menu1/menu1-2/menu1-2-2"),
-                name: "Menu1-2-2",
-                meta: { title: "Menu1-2-2" }
-              }
-            ]
-          },
-          {
-            path: "menu1-3",
-            component: () => import("@/views/nested/menu1/menu1-3"),
-            name: "Menu1-3",
-            meta: { title: "Menu1-3" }
-          }
-        ]
-      },
-      {
-        path: "Menu2",
-        component: () => import("@/views/nested/menu2/index"),
-        name: 'Menu2',
-        meta: { title: "Menu2" }
-      }
-    ]
-  },
+  // nested
+  nestedRouts,
   { path: '*', redirect: '/404', hidden: true }
 ];
 

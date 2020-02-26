@@ -1,5 +1,13 @@
-// import Mock from 'mockjs'
-
+import Mock from 'mockjs'
+const count = 50
+let mockNameList = []
+for(let i = 0; i < count; i++) {
+    mockNameList.push(
+        Mock.mock({
+            name: '@first'
+        })
+    )
+}
 export default [
     {
         url: '/transaction/list',
@@ -16,6 +24,23 @@ export default [
                     price: '@float(1000, 15000, 0, 2)',
                     'status|1' : ['success', 'pending']
                 }]
+            }
+        }
+    },
+    // 搜索作者
+    {
+        url: '/search/author',
+        type: 'get',
+        response: config => {
+            const { name } = config.query
+            const nameList = mockNameList.filter(i => {
+                return i.name.toLowerCase().indexOf(name.toLowerCase()) >= 0
+            })
+            return {
+                code: 20000,
+                data: {
+                    items: nameList
+                }
             }
         }
     }

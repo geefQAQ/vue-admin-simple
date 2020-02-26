@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sticky :className="'va-sticky-bg'">
+        <sticky :class-name="'va-sticky-bg'">
             <el-dropdown style="margin-right: 5px;" trigger="click">
                 <el-button plain>
                     选择平台<i class="el-icon-caret-bottom el-icon--right"></i>

@@ -91,3 +91,17 @@ aside {
 .va-app-container {
     padding: 20px;
 }
+
+// sticky背景
+.va-sticky-bg {
+    height: 50px;
+    background: linear-gradient(90deg, #20b6f9, #2178f1);
+    text-align: right;
+    line-height: 49px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    
+    &.draft {
+        background: #d0d0d0;
+    }
+}

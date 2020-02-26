@@ -13,6 +13,7 @@
             border
             fit
             highlight-current-row
+            :key="key"
         >
             <el-table-column label="水果名" width="100" style="width: 100%">
                 <template slot-scope="{row}">
@@ -47,7 +48,13 @@ export default {
                 }
             ],
             formThead: ['apple', 'banana'],
+            key: 1,
         }
     },
+    watch: {
+        formThead() {
+            this.key = this.key + 1
+        }
+    }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <!-- 看起来很简单的功能，需要考虑的1、动态修改样式是直接修改属性还是添加类名 2、如何保证组件的可复用性 3、为什么不能用一个元素来实现要用2个 -->
     <div style="height: 50px;">
-        <div :class="className" :style="{top:(isSticky ? stickyTop + 'px': ''), width: width + 'px', position, }">
+        <div :class="className" :style="{top:(isSticky ? stickyTop + 'px': ''), zIndex: zIndex, width: width + 'px', position, }">
             <slot>
                 sticky
             </slot>
@@ -18,6 +18,10 @@ export default {
         stickyTop: {
             type: Number,
             default: 0
+        },
+        zIndex: {
+            type: Number,
+            default: 1
         }
     },
     data() {
@@ -28,7 +32,6 @@ export default {
         }
     },
     mounted() {
-        // console.log('stickyTop', this.stickyTop)
         window.addEventListener('scroll', this.handleScroll)
         // 改变宽度时宽度也会动态改变
         window.addEventListener('resize', this.handleResize)
@@ -70,21 +73,3 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-.va-sticky-bg {
-    height: 50px;
-    background: linear-gradient(90deg, #20b6f9, #2178f1);
-    text-align: right;
-    line-height: 50px;
-    padding-right: 20px;
-    box-sizing: border-box;
-}
-// .is-sticky {
-//     position: fixed;
-//     top: 0;
-// }
-// .not-sticky {
-//     position: static;
-//     width: auto;
-// }
-</style>

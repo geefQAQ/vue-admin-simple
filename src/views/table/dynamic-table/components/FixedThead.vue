@@ -56,6 +56,7 @@ export default {
     },
     watch: {
         checkboxVal(valArr) {
+            // 这里是固定表头顺序的关键，给定一个顺序的数组，然后无论valArr中数组排序怎样，最后filter出来的还是按原顺序排列的
             this.formThead = this.fruitsOptions.filter(i => valArr.indexOf(i) >= 0)
             this.key = this.key + 1 // 确保每次都会重新渲染，不加key的话，会有明显的撑开闪现
         }
