@@ -1,7 +1,7 @@
 <template>
-<div>
-    <el-form>
-        <sticky :z-index="10" :class-name="'va-sticky-bg draft'">
+    <!-- el-form的:model不能写成v-model，要细心留意demo的格式，不要随便改！ -->
+    <el-form ref="postForm" :rules="rules" :model="postForm">
+        <sticky :z-index="10" :class-name="'va-sticky-bg ' + postForm.status">
             <el-dropdown class="ca-dropdown" trigger="click">
                  <el-button size="medium" class="ca-button" type="plain">
                     评论：{{postForm.comment_disabled}}<i class="el-icon-caret-bottom el-icon--right"></i>
@@ -38,7 +38,13 @@
                     </el-input>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button size="medium" type="success">
+            <el-button 
+            @click="submitForm" 
+            v-loading="buttonLoading"  :disabled="buttonLoading"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(255, 255, 255, 0.8)"
+            class="submit-button"
+            size="medium" type="success">
                 发布
             </el-button>
         </sticky>
@@ -52,14 +58,14 @@
             
             <el-row>
                 <el-col :span="24">
-                    <el-form-item style="margin-bottom: 40px;">
-                        <m-input v-model="postForm.title" name="name">
+                    <el-form-item prop="title" style="margin-bottom: 40px;">
+                        <m-input v-model="postForm.title" name="name" required>
                             标题
                         </m-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="作者:">
+                    <el-form-item prop="author" label="作者:">
                         <!-- reserve-keyword：选中一个item后，blur后再focus时，会弹出搜索到该item的位置及全列表 -->
                         <el-select
                             v-model="postForm.author"
@@ -80,7 +86,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="发布时间:">
+                    <el-form-item prop="date" label="发布时间:">
                         <el-date-picker
                             v-model="postForm.displayTime"
                             size="medium"
@@ -91,7 +97,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="重要性:">
+                    <el-form-item prop="importance" label="重要性:">
                         <el-rate
                             v-model="postForm.importance"
                             :max="3"
@@ -103,7 +109,7 @@
                 </el-col>
             </el-row>
             <!-- label-width可以让label不占满一行的宽度，因为label是浮动 -->
-            <el-form-item label="概要:" label-width="44px">
+            <el-form-item prop="summary" label="概要:" label-width="60px">
                 <el-input
                     type="textarea"
                     placeholder="请输入概要"
@@ -115,15 +121,20 @@
                     class="ca-summary"
                 />
             </el-form-item>
-            <tinymce v-model="content"/>
+            <el-form-item prop="content">
+                <tinymce v-model="postForm.content"/>
+            </el-form-item>
+            <el-form-item prop="image_uri">
+                <upload v-model="postForm.image_uri"/>
+            </el-form-item>
         </div>
     </el-form>
-</div>
 </template>
 <script>
 import Sticky from '@/components/Sticky'
 import Tinymce from '@/components/Tinymce'
 import MInput from '@/components/MaterialInput'
+import Upload from '@/components/Upload'
 import { searchAuthor } from '@/api/remote-search'
 export default {
     name: 'CreateArticle',
@@ -131,8 +142,23 @@ export default {
         Tinymce,
         Sticky,
         MInput,
+        Upload
     },
     data() {
+        // https://github.com/yiminghe/async-validator
+        const validateRequire = (rule, value, callback) => {
+            // summary即是初始值为''，不明原因转换为undefined，title则不会，所以这里判断条件是!value，不能是value === ''
+            // 用到validator函数是因为要触发$message，相当于执行callback这个异步操作之前，先触发$message，相当于让异步提示前有操作的空间
+            if (!value) {
+                this.$message({
+                    message: rule.field + '为必传项',
+                    type: 'error'
+                })
+                callback(new Error(rule.field + '为必传项'))
+            } else {
+                callback()
+            }
+        }
         return {
             authorLoading: false,
             postForm: {
@@ -145,8 +171,20 @@ export default {
                 importance: 1,
                 summary: '',
                 title: '',
+                image_uri: '',
+                content: '',
+                status: 'draft'
             },
-            content: '<p>test</p>',
+            buttonLoading: false,
+            // rules
+            rules: {
+                title: [{validator: validateRequire}],
+                // author: [{validator: validateRequire}],
+                // date: [{validator: validateRequire}],
+                content: [{validator: validateRequire}],
+                // image_uri: [{validator: validateRequire}],
+                // summary: [{required: true, message: '请输入概要', trigger: 'blur'}]
+            }
         }
     },
     methods: {
@@ -158,6 +196,24 @@ export default {
                     this.authorLoading = false
                 })
         },
+        submitForm() {
+            this.$refs.postForm.validate(valid => {
+                if(valid) {
+                    this.buttonLoading = true,
+                    this.$notify({
+                        title: '成功',
+                        message: '发布文章成功',
+                        type: 'success',
+                        duration: 2000,
+                        // offset: 100,
+                    })
+                    this.postForm.status = 'published'
+                    this.buttonLoading = false
+                }else {
+                    return false
+                }
+            })
+        }
     },
 }
 </script>
@@ -199,9 +255,9 @@ export default {
         bottom: 5px;
     }
 }
-</style>
-<style lang="scss">
-.el-rate__icon {
-    margin-right: 3px;
+.submit-button /deep/ {
+    .el-loading-spinner {
+        margin-top: -7px;
+    }
 }
 </style>

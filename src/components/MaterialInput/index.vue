@@ -80,7 +80,6 @@ export default {
   },
   watch: {
     value(newValue) {
-      console.log(newValue)
       this.currentValue = newValue
     }
   },
