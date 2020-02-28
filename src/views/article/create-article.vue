@@ -183,7 +183,6 @@ export default {
                 // image_uri: [{validator: validateRequire}],
                 // summary: [{required: true, message: '请输入概要', trigger: 'blur'}]
             },
-            test: ''
         }
     },
     methods: {

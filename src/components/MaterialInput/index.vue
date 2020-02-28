@@ -32,7 +32,7 @@
 <script>
 // source:https://github.com/wemake-services/vue-material-input/blob/master/src/components/MaterialInput.vue
 export default {
-    name: 'M',
+    name: 'MInput',
     props: {
         type: {
             type: String,
@@ -42,6 +42,9 @@ export default {
         icon: String,
         placeholder: String,
         disabled: Boolean,
+        readonly: Boolean,
+        minlength: Number,
+        maxlength: Number,
         autoComplete: {
             type: String,
             default: 'off'
@@ -50,9 +53,10 @@ export default {
             type: Boolean,
             default: true
         },
-        readonly: Boolean,
-        minlength: Number,
-        maxlength: Number,
+        validateEvent: {
+            type: Boolean,
+            default: true
+        }
     },
     data() {
         return {
@@ -79,6 +83,15 @@ export default {
         handleInput(event) {
             const value = event.target.value
             this.$emit('input', value)
+            // 这段代码作用是可以输入文本的时候同时在父组件进行校验，原理不懂，特别是el.form.change，这样都可以触发父组件change事件？？
+            if (this.$parent.$options.componentName === 'ElFormItem') {
+            // componentName是在原型链上找的，也就是说只要父辈元素有componentName是ElFormItem就可以
+              if (this.validateEvent) {
+                this.$parent.$emit('el.form.change', [value]) // 这里就真不明白了，el和form甚至不用$ https://cn.vuejs.org/v2/api/#parent 官方甚至不推荐
+                // 估计是https://github.com/yiminghe/async-validator 中封装了el.form.change事件，
+              }
+            }
+            // this.$emit('change', value) // 监听文本框内容，并传到父组件相应的变量中，感觉是和input事件重复了,有一点不同就是父组件校验的时候,change可以一直触发校验事件，input只有在提交时才能触发
         },
         handleFocus() {
             this.focused = true
@@ -89,6 +102,12 @@ export default {
         handleBlur() {
             this.focused = false
             this.fullPlaceHolder = null // 避免误以为是填写了
+            // 同样的blur时候也能触发el.form.blur
+            // if (this.$parent.$options.componentName === 'ElFormItem') {
+            //     if (this.validateEvent) {
+            //     this.$parent.$emit('el.form.blur', [this.currentValue])
+            //     }
+            // }
         }
     },
 }
