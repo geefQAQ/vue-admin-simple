@@ -59,9 +59,7 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item prop="title" style="margin-bottom: 40px;">
-                        <m-input v-model="postForm.title" name="name" required>
-                            标题
-                        </m-input>
+                        <m-input v-model="postForm.title" icon="setting"  placeholder="可以是标题党建议之类的提示" :maxlength="100">标题</m-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -142,7 +140,7 @@ export default {
         Tinymce,
         Sticky,
         MInput,
-        Upload
+        Upload,
     },
     data() {
         // https://github.com/yiminghe/async-validator
@@ -184,7 +182,8 @@ export default {
                 content: [{validator: validateRequire}],
                 // image_uri: [{validator: validateRequire}],
                 // summary: [{required: true, message: '请输入概要', trigger: 'blur'}]
-            }
+            },
+            test: ''
         }
     },
     methods: {

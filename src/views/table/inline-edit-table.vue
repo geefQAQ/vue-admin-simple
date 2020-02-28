@@ -129,7 +129,7 @@ export default {
 .va-cancel-button {
     position: absolute;
     right: 10px;
-    top: 13px;
+    top: 11px;
     padding: 8px 15px;
 }
 </style>
