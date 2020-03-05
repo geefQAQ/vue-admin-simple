@@ -87,6 +87,7 @@
                     <el-form-item prop="date" label="发布时间:">
                         <el-date-picker
                             v-model="postForm.displayTime"
+                            format="yyyy-MM-dd HH:mm:ss"
                             size="medium"
                             type="datetime"
                             placeholder="请选择日期时间"
@@ -134,6 +135,7 @@ import Tinymce from '@/components/Tinymce'
 import MInput from '@/components/MaterialInput'
 import Upload from '@/components/Upload'
 import { searchAuthor } from '@/api/remote-search'
+import { fetchArticle } from '@/api/article'
 export default {
     name: 'CreateArticle',
     components: {
@@ -141,6 +143,12 @@ export default {
         Sticky,
         MInput,
         Upload,
+    },
+    props: {
+        isEdit: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         // https://github.com/yiminghe/async-validator
@@ -158,6 +166,7 @@ export default {
             }
         }
         return {
+            tempRoute: {},
             authorLoading: false,
             postForm: {
                 comment_disabled: "开启",
@@ -185,7 +194,44 @@ export default {
             },
         }
     },
+    created() {
+        if(this.isEdit) {
+            // 请求
+            if(this.$route.params && this.$route.params.id) {
+                this.fetchData(this.$route.params.id)
+            }
+        }
+        this.tempRoute = Object.assign({}, this.$route)
+    },
     methods: {
+        fetchData(id) {
+            fetchArticle(id)
+            .then(res => {
+                this.postForm.id = +res.data.id
+                this.postForm.title = res.data.title + ' 文章ID:' + id
+                this.postForm.author = res.data.author
+                this.postForm.importance = res.data.imp
+                this.postForm.displayTime = +res.data.date
+                this.postForm.image_uri = res.data.image_uri
+                this.postForm.content = res.data.baseContent
+                this.postForm.summary = res.data.summary + ' 文章ID:' + id
+            })
+            .then(() => {
+                // 更新标签名
+                this.updateTagViewTitle()
+                this.updatePageTitle()
+            })
+            
+        },
+        updateTagViewTitle() {
+            const title = 'Edit Article'
+            const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
+            this.$store.dispatch('tagsView/updateVisitedView', route)
+        },
+        updatePageTitle() {
+            const title = 'Edit Article'
+            document.title = `${title} - ${this.postForm.id}`
+        },
         getRemoteUserList(val) {
             this.authorLoading = true,
             searchAuthor(val)

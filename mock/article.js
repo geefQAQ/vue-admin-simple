@@ -1,6 +1,8 @@
 import Mock from 'mockjs'
 const data = []
 const count = 100
+const baseContent = '<p>测试数据</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
+const image_uri = 'https://wpimg.wallstcn.com/e4558086-631c-425c-9430-56ffb46e70b3'
 // 怎样才能刷新后还能保持之前的数据不变？是vue的设置还是mock的设置
 for(let i = 0; i < count; i++) {
     data.push(Mock.mock({
@@ -16,7 +18,12 @@ for(let i = 0; i < count; i++) {
           { key: 'Android', pv: "@integer(100, 4000)" }
         ],
         'status|1': ['发布', '草稿', '删除'],
-        'region|1': ['中国', '美洲', '欧洲', '日本']
+        'region|1': ['中国', '美洲', '欧洲', '日本'],
+        comment_disabled: false,
+        summary: '概要',
+        baseContent,
+        image_uri,
+        platforms: ['平台1']
     }))
 }
 // const data = Mock.mock({
@@ -76,6 +83,23 @@ export default [
                 data: {
                     total: mockList.length,
                     items: pageList
+                }
+            }
+        }
+    },
+    // 获取文章
+    {
+        url: '/article/detail',
+        type: 'get',
+        response: config => {
+            const { id } = config.query
+            // 经过处理后，传过来的id是string，转换
+            for(let item of data) {
+                if(item.id === +id) {
+                    return {
+                        code: 20000,
+                        data: item
+                    }
                 }
             }
         }

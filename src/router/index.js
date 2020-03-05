@@ -13,7 +13,8 @@ import nestedRouts from './modules/nested'
 /**
  * Note: 子菜单只显示于该路由的子路由长度 >= 1
  *
- * hidden: true                     true: 该路由不会显示在sidebar，如404,login
+ * hidden: true                     true: 该路由不会显示在sidebar，如404,login,article/edit
+ * activeMenu: 'path'               path: 如编辑文章页面，需要指定一个页面来在sidebar上高亮显示
  */
 
 export const constantRoutes = [
@@ -99,7 +100,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/create-article',
-        component: () => import('@/views/article/create-article'),
+        component: () => import('@/views/article/create'),
         name: 'CreateArticle',
         meta: { title: 'Create Article', icon: 'milk-tea' }
       },
@@ -108,6 +109,13 @@ export const constantRoutes = [
         component: () => import('@/views/article/article-list'),
         name: 'ArticleList',
         meta: { title: 'Article List', icon: 'burger' }
+      },
+      {
+        path: '/article/edit/:id',
+        component: () => import('@/views/article/edit'),
+        name: 'EditArticle',
+        meta: { title: 'Edit Article', activeMenu: '/article-list' },
+        hidden: true
       }
     ]
   },

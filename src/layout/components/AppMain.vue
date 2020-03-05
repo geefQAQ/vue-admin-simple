@@ -10,6 +10,8 @@
 export default {
   name: 'AppMain',
   computed: {
+    // https://panjiachen.gitee.io/vue-element-admin-site/zh/guide/essentials/layout.html#app-main
+    // 只要保证 key 唯一性就可以了，保证不同页面的 key 不相同，触发渲染钩子
     key() {
       return this.$route.path
     }

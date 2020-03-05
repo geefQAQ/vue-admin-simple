@@ -40,8 +40,14 @@ export default {
   // computed 当$router改变时才重新计算，methods是每次都会重新触发
   computed: {
     // sidebar随着url改变而获得激活对应的导航
+    // activeMenu应用的一个例子是编辑文章(article/edit)，修改文章而出现新的页面时，会找不到path，sidebar会失去高亮的选项，这时就需要给一个属性来指定path
     activeMenu() {
-      return this.$route.path
+      const route = this.$route
+      const { meta, path } = route
+      if(meta.activeMenu) {
+        return meta.activeMenu
+      }
+      return path
     },
     routes: function() {
       // 只有静态路由，不能查看addRoutes添加后的完整路由，也没有官方api

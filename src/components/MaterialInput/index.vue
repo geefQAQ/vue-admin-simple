@@ -88,7 +88,8 @@ export default {
             // componentName是在原型链上找的，也就是说只要父辈元素有componentName是ElFormItem就可以
               if (this.validateEvent) {
                 this.$parent.$emit('el.form.change', [value]) // 这里就真不明白了，el和form甚至不用$ https://cn.vuejs.org/v2/api/#parent 官方甚至不推荐
-                // 估计是https://github.com/yiminghe/async-validator 中封装了el.form.change事件，
+                // 估计是 中封装了el.form.change事件，
+                // 是ElForm中封装的el.form里面的事件，有兴趣可以看下ElForm的源码
               }
             }
             // this.$emit('change', value) // 监听文本框内容，并传到父组件相应的变量中，感觉是和input事件重复了,有一点不同就是父组件校验的时候,change可以一直触发校验事件，input只有在提交时才能触发

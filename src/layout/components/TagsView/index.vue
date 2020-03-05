@@ -2,16 +2,18 @@
     <div class="va-tagsview-container">
         <!-- 为什么middle要加上native才能正常使用 -->
         <!-- 中键是原生事件，绑定到自定义的组件（router-link）就要用.native修饰符 -->
+        <!-- key之前用的是name，但是path才是保证唯一的，name有可能在同一组件的时候重复 -->
+        <!-- 显示的字符串之前用的是tag.meta.title，换成tag.title确保可以通过更新tagsViews时进行更新 -->
         <router-link
             v-for="tag in visitedViews"
-            :key="tag.name"
+            :key="tag.path"
             tag="span"
             :class="isActive(tag)? 'active' : ''"
             class="va-tagsview-item"
             :to="{path: tag.path}"
             @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
             @contextmenu.prevent.native="openMenu(tag, $event)"
-        >{{tag.meta.title}}
+        >{{tag.title}}
             <span v-if="!isAffix(tag)" class="el-icon-close" @click.stop="closeSelectedTag(tag)"></span>
         </router-link>
         <ul v-show="visible" :style="{left: left + 'px', top: top + 'px'}" class="contextmenu">
