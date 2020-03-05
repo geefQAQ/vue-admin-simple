@@ -2,7 +2,7 @@
     <article-detail :is-edit="true" />
 </template>
 <script>
-import ArticleDetail from './create-article'
+import ArticleDetail from './components/article-detail'
 export default {
     name: 'EditArticle',
     components: {

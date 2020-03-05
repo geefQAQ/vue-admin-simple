@@ -2,42 +2,9 @@
     <!-- el-form的:model不能写成v-model，要细心留意demo的格式，不要随便改！ -->
     <el-form ref="postForm" :rules="rules" :model="postForm">
         <sticky :z-index="10" :class-name="'va-sticky-bg ' + postForm.status">
-            <el-dropdown class="ca-dropdown" trigger="click">
-                 <el-button size="medium" class="ca-button" type="plain">
-                    评论：{{postForm.comment_disabled}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu class="ca-dropdown-menu">
-                    <!-- 加入item标签，在change事件后会自动消失，如果删除item标签，change后不会消失-->
-                    <el-dropdown-item class="ca-dropdown-item">
-                        <el-radio-group v-model="postForm.comment_disabled">
-                            <el-radio :label="'开启'">开启评论</el-radio>
-                            <el-radio :label="'关闭'">关闭评论</el-radio>
-                        </el-radio-group>
-                    </el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <el-dropdown class="ca-dropdown" trigger="click">
-                <el-button size="medium" class="ca-button" type="plain">
-                    平台{{`(${postForm.platforms.length})`}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu class="ca-dropdown-menu" style="padding: 10px 20px;">
-                    <el-checkbox-group v-model="postForm.platforms">
-                        <el-checkbox label="平台1"></el-checkbox>
-                        <el-checkbox label="平台2"></el-checkbox>
-                        <el-checkbox label="平台3"></el-checkbox>
-                    </el-checkbox-group>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <el-dropdown class="ca-dropdown" trigger="click">
-                <el-button size="medium" type="plain">
-                    链接<i class="el-icon-caret-bottom el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu class="ca-dropdown-menu">
-                    <el-input placeholder="请输入链接" style="width: 400px;" v-model="postForm.source_uri">
-                        <template slot="prepend">URL</template>
-                    </el-input>
-                </el-dropdown-menu>
-            </el-dropdown>
+            <comment-dropdown v-model="postForm.comment_disabled" />
+            <platform-dropdown v-model="postForm.platforms" />
+            <source-url-dropdown v-model="postForm.source_uri" />
             <el-button 
             @click="submitForm" 
             v-loading="buttonLoading"  :disabled="buttonLoading"
@@ -49,13 +16,7 @@
             </el-button>
         </sticky>
         <div class="va-app-container">
-            <aside>
-                目前缓存的方案对于某些业务是不适合的，比如文章详情页这种 /article/1 /article/2，他们的路由不同但对应的组件却是一样的，所以他们的组件 name 就是一样的，就如前面提到的，keep-alive的 include 只能根据组件名来进行缓存，所以这样就出问题了。目前有两种解决方案：
-                不使用 keep-alive 的 include 功能 ，直接是用 keep-alive 缓存所有组件，这样子是支持前面所说的业务情况的。 前往@/layout/components/AppMain.vue文件下，移除include相关代码即可。当然直接使用 keep-alive 也是有弊端的，他并不能动态的删除缓存，你最多只能帮它设置一个最大缓存实例的个数 limit。相关 issue
-                使用 localStorage 等浏览器缓存方案，自己进行缓存处理
-                <a href="https://panjiachen.gitee.io/vue-element-admin-site/zh/guide/essentials/tags-view.html#visitedviews-cachedviews">点击这里查看更多</a>
-            </aside>
-            
+            <warning />
             <el-row>
                 <el-col :span="24">
                     <el-form-item prop="title" style="margin-bottom: 40px;">
@@ -136,6 +97,12 @@ import MInput from '@/components/MaterialInput'
 import Upload from '@/components/Upload'
 import { searchAuthor } from '@/api/remote-search'
 import { fetchArticle } from '@/api/article'
+import Warning from '../components/warning'
+// import CommentDropdown from "./dropdown/comment";
+// import PlatformsDropdown from "./dropdown/platform";
+// import SourceUriDropdown from "./dropdown/source-uri";
+import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './dropdown'
+
 export default {
     name: 'CreateArticle',
     components: {
@@ -143,6 +110,10 @@ export default {
         Sticky,
         MInput,
         Upload,
+        Warning,
+        CommentDropdown,
+        PlatformDropdown,
+        SourceUrlDropdown
     },
     props: {
         isEdit: {
@@ -169,7 +140,7 @@ export default {
             tempRoute: {},
             authorLoading: false,
             postForm: {
-                comment_disabled: "开启",
+                comment_disabled: false,
                 platforms: ['平台1'],
                 source_uri: '',
                 author: '',
@@ -267,8 +238,6 @@ export default {
 }
 .ca-dropdown-menu {
     padding: 0;
-   
-    
 }
 .ca-dropdown-item {
     padding: 0 20px;

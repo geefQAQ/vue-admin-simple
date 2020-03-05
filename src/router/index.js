@@ -95,11 +95,11 @@ export const constantRoutes = [
     path: '/article',
     component: Layout,
     name: 'Article',
-    redirect: '/article/create-article',
+    redirect: '/article/article-detail',
     meta: { title: 'Article', icon: 'toilet-paper' },
     children: [
       {
-        path: '/create-article',
+        path: '/article-detail',
         component: () => import('@/views/article/create'),
         name: 'CreateArticle',
         meta: { title: 'Create Article', icon: 'milk-tea' }
