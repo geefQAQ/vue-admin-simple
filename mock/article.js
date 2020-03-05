@@ -18,7 +18,7 @@ for(let i = 0; i < count; i++) {
           { key: 'Android', pv: "@integer(100, 4000)" }
         ],
         'status|1': ['发布', '草稿', '删除'],
-        'region|1': ['中国', '美洲', '欧洲', '日本'],
+        'region|1': ['中国', '美国', '欧洲', '日本'],
         comment_disabled: false,
         summary: '概要',
         baseContent,

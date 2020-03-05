@@ -119,6 +119,20 @@ export const constantRoutes = [
       }
     ]
   },
+  // tab标签页
+  {
+    path: '/tab',
+    component: Layout,
+    redirect: '/tab/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/tab/index'),
+        name: 'Tab',
+        meta: { title: 'Tab', icon: 'refrigerator' }
+      }
+    ]
+  },
   {
     path: "/example",
     component: Layout,

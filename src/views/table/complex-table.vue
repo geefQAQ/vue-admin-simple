@@ -192,7 +192,7 @@ export default {
             },
             regions: [
                 { label: '中国', value: '中国' },
-                { label: '美洲', value: '美洲' },
+                { label: '美国', value: '美国' },
                 { label: '欧洲', value: '欧洲' },
                 { label: '日本', value: '日本' },
             ],
