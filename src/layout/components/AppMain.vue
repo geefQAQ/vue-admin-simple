@@ -25,6 +25,7 @@ export default {
     // background-color: rgb(241, 183, 198);
     // 切割 否则当 transition 时，发生水平偏移，撑大元素，出现水平滚动条，页面颤动
     overflow: hidden;
+    position: relative;
 }
 // 很灵活使用了兄弟选择器
 // 情况1：设置了fixed-header，但是不显示tag-view

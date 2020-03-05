@@ -40,7 +40,7 @@ export const constantRoutes = [
   {
     path: '/404',
     name: '404',
-    component: () => import("@/views/404"),
+    component: () => import("@/views/error-page/404"),
     hidden: true
   },
   {
@@ -130,6 +130,27 @@ export const constantRoutes = [
         component: () => import('@/views/tab/index'),
         name: 'Tab',
         meta: { title: 'Tab', icon: 'refrigerator' }
+      }
+    ]
+  },
+  // 错误提示页
+  {
+    path: '/error',
+    component: Layout,
+    redirect: '/error/401',
+    meta: { title: 'Error Page', icon: 'error' },
+    children: [
+      {
+        path: '401',
+        component: () => import('@/views/error-page/401'),
+        name: '401',
+        meta: { title: '401' }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: '404',
+        meta: { title: '404' }
       }
     ]
   },
