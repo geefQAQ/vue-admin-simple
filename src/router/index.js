@@ -143,15 +143,36 @@ export const constantRoutes = [
       {
         path: '401',
         component: () => import('@/views/error-page/401'),
-        name: '401',
+        name: 'ErrorPage401',
         meta: { title: '401' }
       },
       {
         path: '404',
         component: () => import('@/views/error-page/404'),
-        name: '404',
+        name: 'ErrorPage404',
         meta: { title: '404' }
       }
+    ]
+  },
+  // excel
+  {
+    path: '/excel',
+    component: Layout,
+    redirect: '/excel/export-excel',
+    meta: { title: 'Excel', icon: 'document' },
+    children: [
+      {
+        path: 'export-excel',
+        component: () => import('@/views/excel/export-excel'),
+        name: 'ExportExcel',
+        meta: { title: 'Export Excel' }
+      },
+      {
+        path: 'export-selected',
+        component: () => import('@/views/excel/export-selected'),
+        name: 'ExportSelected',
+        meta: { title: 'Export Selected' }
+      },
     ]
   },
   {

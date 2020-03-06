@@ -101,16 +101,21 @@ function Workbook () {
 export function export_json_to_excel ({
     data,
     header,
-    bookType,
+    bookType = 'xlsx',
     fileName,
+    autoWidth = true,
 }) {
+    fileName = fileName || 'excel-list'
+    console.log('bookType', bookType, 'fileName', fileName)
     // 步骤
     // 1、处理参数，二维数组转换成excel的格式 
     const sheetName = 'sheetname'
     data.unshift(header) // 添加表头
     // 1.1 处理data，格式化为ws，并设置列宽度
     ws = sheet_from_array_of_arrays(data)
-    setColMaxWidth(data)
+    if(autoWidth) {
+        setColMaxWidth(data)
+    }
     // 1.2 声明workbook，作为参数传入到xlsx.wirte方法
     let wb = new Workbook()
     wb.SheetNames.push(sheetName)
