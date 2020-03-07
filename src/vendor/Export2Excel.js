@@ -9,9 +9,9 @@ function sheet_from_array_of_arrays (data) {
             r: 0, // r: row,
             c: 0, // c: column
         },
-        e: {  // e: end
-            r: data.length,
-            c: data[0].length,
+        e: {  // e: end 注意要减一，因为遍历是从0开始，例如传入的header的长度为5，那会遍历6次，多出一列，行也同理
+            r: data.length - 1,
+            c: data[0].length - 1,
         }
     }
     // R相当于每个data的项，data[R]相当于当前data的项的项，建议打印下data，二维数组
@@ -100,22 +100,41 @@ function Workbook () {
 
 export function export_json_to_excel ({
     data,
+    multiHeader = [],
     header,
+    merges = [],
     bookType = 'xlsx',
     fileName,
     autoWidth = true,
 }) {
+    // 比写在参数的默认形式要好点。。兼容''和null的情况
     fileName = fileName || 'excel-list'
-    console.log('bookType', bookType, 'fileName', fileName)
+    data = [...data]
+    data.unshift(header) // 添加表头
+    if(multiHeader.length > 0) {
+        // 从数组的最后一项开始unshift，所以i取值为length - 1, 跳出循环时，i为-1，就是说取了0项之后跳出循环
+        for(let i = multiHeader.length - 1; i > -1; i-- ) {
+            data.unshift(multiHeader[i])
+        }
+    }
+    
     // 步骤
     // 1、处理参数，二维数组转换成excel的格式 
     const sheetName = 'sheetname'
-    data.unshift(header) // 添加表头
+    
     // 1.1 处理data，格式化为ws，并设置列宽度
     ws = sheet_from_array_of_arrays(data)
+    // 注意merge是push进去的，还要注意顺序，先处理玩表头
+    if(merges.length > 0) {
+        if(!ws['!merges']) ws['!merges'] = []
+        merges.forEach(item => {
+            ws['!merges'].push(XLSX.utils.decode_range(item))
+        })
+    }
     if(autoWidth) {
         setColMaxWidth(data)
     }
+    console.log('ws', ws)
     // 1.2 声明workbook，作为参数传入到xlsx.wirte方法
     let wb = new Workbook()
     wb.SheetNames.push(sheetName)

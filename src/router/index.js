@@ -173,6 +173,18 @@ export const constantRoutes = [
         name: 'ExportSelected',
         meta: { title: 'Export Selected' }
       },
+      {
+        path: 'merge-header',
+        component: () => import('@/views/excel/merge-header'),
+        name: 'MergeHeader',
+        meta: { title: 'Merge Header' }
+      },
+      {
+        path: 'upload-excel',
+        component: () => import('@/views/excel/upload-excel'),
+        name: 'UploadExcel',
+        meta: { title: 'Upload Excel' }
+      }
     ]
   },
   {

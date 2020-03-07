@@ -74,8 +74,8 @@ export default {
             // 插件体积比较大，所以建议这样的懒加载
             import('@/vendor/Export2Excel')
                 .then(excel => {
-                    const tHeader = ['ID', '标题', '阅读数', '日期']
-                    const filterVal = ['id', 'title', 'readings', 'date']
+                    const tHeader = ['ID', '标题', '作者', '阅读数', '日期']
+                    const filterVal = ['id', 'title', 'author', 'readings', 'date']
                     const data = this.formatJSON(this.list, filterVal)
                     excel.export_json_to_excel({
                         data,
