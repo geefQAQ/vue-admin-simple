@@ -15,6 +15,7 @@ import nestedRouts from './modules/nested'
  *
  * hidden: true                     true: 该路由不会显示在sidebar，如404,login,article/edit
  * activeMenu: 'path'               path: 如编辑文章页面，需要指定一个页面来在sidebar上高亮显示
+ * alwasShow: true                  true: 总是出现根路由，就算只有一个子路由，如果不设置或者false，只有两个以上的子路由时，才会出现包含层叠的效果
  */
 
 export const constantRoutes = [
@@ -187,6 +188,22 @@ export const constantRoutes = [
       }
     ]
   },
+  // zip
+  {
+    path: '/zip',
+    component: Layout,
+    redirect: '/zip/export-zip',
+    alwaysShow: true,
+    meta: { title: 'Zip', icon: 'lollipop' },
+    children: [
+      {
+        path: 'export-zip',
+        component: () => import('@/views/zip/index'),
+        name: 'ExportZip',
+        meta: { title: 'Export Zip' },
+      }
+    ]
+  },
   {
     path: "/example",
     component: Layout,
@@ -216,14 +233,6 @@ export const constantRoutes = [
           icon: "umbrella"
         }
       },
-      {
-        path: "test",
-        name: "Test",
-        component: () => import("@/views/test"),
-        meta: {
-          title: "Test"
-        }
-      }
     ]
   },
   {

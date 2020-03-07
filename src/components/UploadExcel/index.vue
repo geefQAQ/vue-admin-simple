@@ -48,7 +48,7 @@ export default {
                 return 
             }
             const rawFile = files[0]
-            if(!this.isExcel(rawFile.name)) {
+            if(!this.isExcel(rawFile)) {
                 this.$message({
                     message: '只能上传后缀名为xlsx, xls, csv的文件',
                     type: 'error',
@@ -136,8 +136,8 @@ export default {
             }
             return headerArray
         },
-        isExcel(filename) {
-            return /\.(xlsx|xls|csv)$/.test(filename)
+        isExcel(file) {
+            return /\.(xlsx|xls|csv)$/.test(file.name)
         }
     }
 }
