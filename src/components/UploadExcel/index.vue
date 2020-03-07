@@ -1,8 +1,9 @@
 <template>
     <div>
-        <input ref="excel-upload-input" class="excel-upload-input" type="file" accept="xlsx" @change="handleClick">
-        <div class="drop-zone">
-            <el-button :disabled="loading" @click="handleDownload" type="primary">浏览文件</el-button>
+        <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls, .csv" @change="handleClick">
+        <div class="drop-zone" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
+            拖动Excel文件到这里，或者点击
+            <el-button :disabled="loading" @click="handleDownload" type="primary" style="margin-left: 15px;vertical-align: middle;">浏览文件</el-button>
         </div>
     </div>
 </template>
@@ -29,6 +30,43 @@ export default {
             this.excelData.results = results
             // 通过方法传递
             this.onSuccess && this.onSuccess(this.excelData)
+        },
+        // 拖动ed
+        handleDrop(e) {
+            e.stopPropagation()
+            e.preventDefault()
+            if(this.loading) {
+                return false
+            }
+            // 为什么e打印出来找不到拖动的文件，甚至dataTransfer属性上也没有，files也是一个空数组
+            // DataTransfer.files属性在拖动操作中表示文件列表。如果操作不包含文件，则此列表为空。
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer/files
+            const files = e.dataTransfer.files
+            // 只处理上传一个文件
+            if(files.length !== 1) {
+                this.$message.error('只支持上传一个文件')
+                return 
+            }
+            const rawFile = files[0]
+            if(!this.isExcel(rawFile.name)) {
+                this.$message({
+                    message: '只能上传后缀名为xlsx, xls, csv的文件',
+                    type: 'error',
+                    duration: 3000
+                })
+            }
+            this.upload(rawFile)
+        },
+        // 拖动ing
+        handleDragover(e) {
+            e.stopPropagation()
+            e.preventDefault()
+            // 不懂
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_Drag_and_Drop_API
+            // copy 表明被拖动的数据将从它原本的位置拷贝到目标的位置。
+            // move 表明被拖动的数据将被移动。
+            // link 表明在拖动源位置和目标位置之间将会创建一些关系表格或是连接。
+            e.dataTransfer.dropEffect = 'copy'
         },
         // 1、处理点击上传事件
         handleClick(e) {
@@ -97,6 +135,9 @@ export default {
                 headerArray.push(cell_format)
             }
             return headerArray
+        },
+        isExcel(filename) {
+            return /\.(xlsx|xls|csv)$/.test(filename)
         }
     }
 }
@@ -114,5 +155,8 @@ export default {
     border-radius: 5px;
     line-height: 160px;
     text-align: center;
+    font-size: 24px;
+    color: #bbb;
+    
 }
 </style>
