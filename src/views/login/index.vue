@@ -21,25 +21,26 @@
                     tabindex="1"
                 />
             </el-form-item>
-            <!-- <el-tooltip v-model="capsLockTip" effect="dark" content="大写锁定已打开" placement="right" manual> -->
+            
+            <el-tooltip v-model="capsLockTip" effect="light" content="大写锁定已打开" placement="right" manual>
                 <el-form-item class="va-input" prop="password">
                     <span class="va-input__prefix">
                         <i class="va-icon va-icon__lock"></i>
                     </span>
                     <!-- password 的 placeholder 不好使？暂用 value 代替 -->
                     <!-- 通过v-model 1、解决 placeholder 不会隐藏的问题，2、focus后光标会自动后移，原理不清楚-->
-                    <el-input 
-                        class="va-input__inner"
-                        ref="password"
-                        v-model="loginForm.password"
-                        :type="passwordType"
-                        @keyup.native="handlePswKeyup"  
-                        @keydown.native="handlePswKeydown"
-                        @blur="capsLockTip = false"
-                        placeholder="Password"
-                        auto-complete="on"
-                        tabindex="2"
-                    />
+                        <el-input 
+                            class="va-input__inner"
+                            ref="password"
+                            v-model="loginForm.password"
+                            :type="passwordType"
+                            @keyup.native="handlePswKeyup"  
+                            @keydown.native="handlePswKeydown"
+                            @blur="capsLockTip = false"
+                            placeholder="Password"
+                            auto-complete="on"
+                            tabindex="2"
+                        />
                     <!-- input自带的show-password太简陋了 -->
                     <span class="va-input__suffix" @click="showPwd">
                         <i 
@@ -48,20 +49,38 @@
                         ></i>
                     </span>
                 </el-form-item>
-            <!-- </el-tooltip> -->
+            </el-tooltip>
+           
             <el-button
                 :disabled="loginLoading"
                 class="va-login__submit"
                 @click.prevent="handleLogin"
-            >{{ loginLoading ? '登录中，请稍后...' : '登录'}}</el-button>
+            >{{ loginLoading ? 'loading...' : 'Login'}}</el-button>
+
+            <div style="position: relative;">
+                <div class="tips"><span>Username : admin</span><span>Password : any</span></div>
+                <div class="tips"><span>Username : editor</span><span>Password : any</span></div>
+                <el-button type="primary" class="thirdparty-button" @click="dialogVisible = true">
+                    Or connect with
+                </el-button>
+            </div>
         </el-form>
+        <el-dialog
+            title="Or connect with"
+            :visible.sync="dialogVisible"
+            >
+            <span>暂时无法模拟第三方登录</span>
+            <social-signin />
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import SocialSignin from './components/social-signin'
 export default {
   name: 'Login',
+  components: { SocialSignin },
   data: function () {
       const validateUsername = (rule, value, callback) => {
           if(!validUsername(value)) {
@@ -93,6 +112,7 @@ export default {
           otherQuery: {},
           loading: false,
           loginLoading: false,
+          dialogVisible: false,
       }
   },
   watch: {
@@ -127,7 +147,8 @@ export default {
             this.capsLockTip = false
         }
         if(key && key.length === 1) { // 为什么长度为1，因为像功能键command，key是'Meta'，这里只校验长度为1的字母
-            if(!shiftKey && (key >= 'A' && key <= 'Z')) {
+            // 不知道为什么，在锁定大写键情况下，按住shift没有改为小写
+            if(shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
                 this.capsLockTip = true
             }
         }
@@ -302,6 +323,7 @@ $dark_gray: #889aa4;
     border-radius: 4px;
     border: none;
     padding: 0;
+    margin-bottom: 22px;
     &:hover, &:focus {
         background: #66b1ff;
         border-color: #66b1ff;
@@ -314,5 +336,21 @@ $dark_gray: #889aa4;
     font-size: 12px;
     color: #F56C6C;
     padding-top: 4px;
+}
+.tips {
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 10px;
+    span {
+        &:first-of-type {
+            margin-right: 16px;
+        }
+    }
+}
+
+.thirdparty-button {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 </style>
