@@ -13,7 +13,11 @@ body {
 
 html {
     height: 100%;
-    box-sizing: padding-box;
+    box-sizing: border-box; // 结合通用选择器*的box-sizing:inherit使用
+}
+
+*, *::before, *::after {
+    box-sizing: inherit
 }
 
 #app {
@@ -53,7 +57,13 @@ a,
 a:focus,
 a:hover {
     text-decoration: none;
+    outline: none;
 }
+
+div:focus {
+    outline: none;
+}
+
 aside {
     background: #eef1f6;
     padding: 8px 24px;
@@ -108,4 +118,9 @@ aside {
 // el-rate
 .el-rate__icon {
     margin-right: 3px;
+}
+
+// el-input
+.el-input__inner:focus {
+    border-color: #409eff;
 }

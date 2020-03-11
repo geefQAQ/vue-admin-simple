@@ -204,6 +204,26 @@ export const constantRoutes = [
       }
     ]
   },
+  // PDF
+  {
+    path: '/pdf',
+    component: Layout,
+    redirect: '/pdf/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/pdf/index'),
+        name: 'PDF',
+        meta: { title: 'PDF', icon: 'document-add' }
+      }
+    ]
+  },
+  // PDF download
+  {
+    path: '/pdf/download',
+    component: () => import('@/views/pdf/download'),
+    hidden: true,
+  },
   {
     path: "/example",
     component: Layout,
