@@ -31,19 +31,26 @@ router.beforeEach(async(to, from, next) => {
     if (hasToken) {
         // 获取到token，登录页重定向到 dashboard
         if (to.path === '/login') {
-            console.log('path为/login')
             next({ path: '/' })
             NProgress.done()
         } else {
-            const hasGetUserInfo = store.getters.name
-            if (hasGetUserInfo) {
-                // console.log('获取到name: ',hasGetUserInfo)
+            // roles必须为['xxx']的形式，空值为[]
+            const hasRoles = store.getters.roles && store.getters.roles.length > 0
+            if (hasRoles) {
                 next()
             }else {
-                // console.log('拉取最新用户信息')
+                console.log('拉取最新用户信息')
                 // 因为用户信息不存储在本地，name 用作判断是否需要拉取用户信息 getUserInfo
                 try {
-                    await store.dispatch('user/getInfo')
+                    // 先获取roles
+                    const { roles } = await store.dispatch('user/getInfo')
+                    console.log('roles', roles)
+                    // 再根据权限生成动态路由
+                    const asyncRoutes = await store.dispatch('permission/generateRoutes', roles)
+                    console.log('asyncRoutes', asyncRoutes)
+                    // 最后用addRoutes生成routes
+                    router.addRoutes(asyncRoutes)
+                    console.log('router', router)
                     next()
                 } catch (error) {
                     await store.dispatch('user/resetToken')

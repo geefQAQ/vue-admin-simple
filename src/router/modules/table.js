@@ -5,7 +5,11 @@ const tableRoutes = {
     component: Layout,
     name: 'Table',
     redirect: '/table/complex-table',
-    meta:{ title: 'Table', icon: 's-grid' },
+    meta:{ 
+      title: 'Table', 
+      icon: 's-grid',
+      roles: ['admin', 'editor']
+    },
     children: [
       {
         path: 'complex-table',

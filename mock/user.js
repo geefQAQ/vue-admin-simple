@@ -4,6 +4,9 @@ const tokens = {
     },
     editor: {
         token: 'editor-token'
+    },
+    intern: {
+        token: 'intern-token'
     }
 }
 
@@ -19,6 +22,12 @@ const users = {
         introduction: '编辑',
         avatar: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
         name: 'Normal Editor'
+    },
+    'intern-token': {
+        roles: ['intern'],
+        introduction: '实习',
+        avatar: 'https://s1.ax1x.com/2020/03/12/8VBYL9.gif',
+        name: 'Trainee'
     }
 }
 

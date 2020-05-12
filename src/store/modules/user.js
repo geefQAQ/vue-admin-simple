@@ -4,7 +4,8 @@ import { getToken, setToken, removeToken } from "@/utils/auth";
 const state = {
   token: getToken(),
   name: "",
-  avatar: ""
+  avatar: "",
+  roles: []
 };
 
 const mutations = {
@@ -16,6 +17,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar;
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 };
 
@@ -51,11 +55,12 @@ const actions = {
           reject('检验失败，请重新登录')
         }
 
-        const { name, avatar } = data
+        const { name, avatar, roles } = data
 
         commit('SET_NAME', name);
         commit('SET_AVATAR', avatar);
-        resolve()
+        commit('SET_ROLES', roles)
+        resolve(data) // 需要返回值
       }).catch(error => {
         reject(error)
       })

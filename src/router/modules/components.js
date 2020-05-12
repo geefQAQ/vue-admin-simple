@@ -5,7 +5,10 @@ const componentsRoutes = {
     component: Layout,
     redirect: '/components/tinymce',
     name: 'Components',
-    meta: { title: 'Components', icon: 'menu' },
+    meta: { 
+      title: 'Components', 
+      icon: 'menu',
+      roles: ['admin', 'editor'] },
     children: [
       {
         path: 'tinymce',

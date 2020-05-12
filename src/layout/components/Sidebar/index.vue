@@ -14,7 +14,7 @@
       :collapse-transition="false"
       class="va-sidebar-menu">
       <sidebar-item 
-        v-for="route in routes"
+        v-for="route in permission_routes"
         :key="route.path"
         :item="route"
         :base-path="route.path"
@@ -51,10 +51,12 @@ export default {
     },
     routes: function() {
       // 只有静态路由，不能查看addRoutes添加后的完整路由，也没有官方api
-      return this.$router.options.routes
+      // return this.$router.options.routes
+      return this.$router
     },
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'permission_routes'
     ]),
     isCollapse: function() {
       return !this.sidebar.opened

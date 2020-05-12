@@ -68,8 +68,11 @@
         <el-dialog
             title="Or connect with"
             :visible.sync="dialogVisible"
-            >
+        >
             <span>暂时无法模拟第三方登录</span>
+            <br>
+            <br>
+            <br>
             <social-signin />
         </el-dialog>
     </div>

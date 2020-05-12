@@ -10,12 +10,18 @@ import Layout from "@/layout";
 import tableRoutes from './modules/table' 
 import componentsRoutes from './modules/components' 
 import nestedRouts from './modules/nested' 
+import excelRoutes from './modules/excel' 
+import articleRoutes from './modules/article' 
 /**
  * Note: 子菜单只显示于该路由的子路由长度 >= 1
  *
  * hidden: true                     true: 该路由不会显示在sidebar，如404,login,article/edit
  * activeMenu: 'path'               path: 如编辑文章页面，需要指定一个页面来在sidebar上高亮显示
  * alwasShow: true                  true: 总是出现根路由，就算只有一个子路由，如果不设置或者false，只有两个以上的子路由时，才会出现包含层叠的效果
+ */
+
+/**
+ * constantRoutes: 不需要权限
  */
 
 export const constantRoutes = [
@@ -76,6 +82,7 @@ export const constantRoutes = [
       }
     ]
   },
+ 
   {
     path: '/icons',
     component: Layout,
@@ -87,39 +94,42 @@ export const constantRoutes = [
       meta: { title: 'Icons', icon: 'no-smoking' }
     }]
   },
+];
+
+/**
+ * asyncRouters: 根据权限动态生成路由
+ */
+export const asyncRoutes = [
+   // permission
+   {
+    path: "/permission",
+    component: Layout,
+    redirect: '/permission/page-permissin',
+    meta: { 
+      title: 'Permission', 
+      icon: 'headset', 
+      roles: ['admin', 'editor'] },
+    children: [
+      {
+        path: 'page-permissin',
+        component: () => import('@/views/permission/page-permissin'),
+        name: 'PagePermission',
+        meta: { title: 'Page Permission' }
+      },
+      {
+        path: 'directive-perimission',
+        component: () => import('@/views/permission/directive-permission'),
+        name: 'DirectivePermission',
+        meta: { title: 'Directive Permission' }
+      }
+    ]
+  },
   // 组件demo
   componentsRoutes,
   // 表格
   tableRoutes,
   // 编辑文章
-  {
-    path: '/article',
-    component: Layout,
-    name: 'Article',
-    redirect: '/article/article-detail',
-    meta: { title: 'Article', icon: 'toilet-paper' },
-    children: [
-      {
-        path: '/article-detail',
-        component: () => import('@/views/article/create'),
-        name: 'CreateArticle',
-        meta: { title: 'Create Article', icon: 'milk-tea' }
-      },
-      {
-        path: '/article-list',
-        component: () => import('@/views/article/article-list'),
-        name: 'ArticleList',
-        meta: { title: 'Article List', icon: 'burger' }
-      },
-      {
-        path: '/article/edit/:id',
-        component: () => import('@/views/article/edit'),
-        name: 'EditArticle',
-        meta: { title: 'Edit Article', activeMenu: '/article-list' },
-        hidden: true
-      }
-    ]
-  },
+  articleRoutes,
   // tab标签页
   {
     path: '/tab',
@@ -130,7 +140,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/tab/index'),
         name: 'Tab',
-        meta: { title: 'Tab', icon: 'refrigerator' }
+        meta: { title: 'Tab', icon: 'refrigerator',roles: ['admin', 'editor'] }
       }
     ]
   },
@@ -139,7 +149,7 @@ export const constantRoutes = [
     path: '/error',
     component: Layout,
     redirect: '/error/401',
-    meta: { title: 'Error Page', icon: 'error' },
+    meta: { title: 'Error Page', icon: 'error', roles: ['admin', 'editor'] },
     children: [
       {
         path: '401',
@@ -156,38 +166,7 @@ export const constantRoutes = [
     ]
   },
   // excel
-  {
-    path: '/excel',
-    component: Layout,
-    redirect: '/excel/export-excel',
-    meta: { title: 'Excel', icon: 'document' },
-    children: [
-      {
-        path: 'export-excel',
-        component: () => import('@/views/excel/export-excel'),
-        name: 'ExportExcel',
-        meta: { title: 'Export Excel' }
-      },
-      {
-        path: 'export-selected',
-        component: () => import('@/views/excel/export-selected'),
-        name: 'ExportSelected',
-        meta: { title: 'Export Selected' }
-      },
-      {
-        path: 'merge-header',
-        component: () => import('@/views/excel/merge-header'),
-        name: 'MergeHeader',
-        meta: { title: 'Merge Header' }
-      },
-      {
-        path: 'upload-excel',
-        component: () => import('@/views/excel/upload-excel'),
-        name: 'UploadExcel',
-        meta: { title: 'Upload Excel' }
-      }
-    ]
-  },
+  excelRoutes,
   // zip
   {
     path: '/zip',
@@ -200,7 +179,7 @@ export const constantRoutes = [
         path: 'export-zip',
         component: () => import('@/views/zip/index'),
         name: 'ExportZip',
-        meta: { title: 'Export Zip' },
+        meta: { title: 'Export Zip', roles: ['admin', 'editor'] },
       }
     ]
   },
@@ -214,7 +193,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/pdf/index'),
         name: 'PDF',
-        meta: { title: 'PDF', icon: 'document-add' }
+        meta: { title: 'PDF', icon: 'document-add', roles: ['admin', 'editor'] }
       }
     ]
   },
@@ -264,14 +243,14 @@ export const constantRoutes = [
         path: "index",
         name: "Form",
         component: () => import("@/views/form/index"),
-        meta: { title: "Form", icon: "document-checked", affix: true }
+        meta: { title: "Form", icon: "document-checked" }
       }
     ]
   },
   // nested
   nestedRouts,
-  { path: '*', redirect: '/404', hidden: true }
-];
+  { path: '*', redirect: '/404', hidden: true } // *必须放在最好，理由你品
+]
 
 const createRouter = () =>
   new Router({

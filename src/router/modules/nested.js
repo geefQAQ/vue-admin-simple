@@ -7,7 +7,8 @@ const nestedRouts =  {
     name: "Nested",
     meta: {
       title: "Nested",
-      icon: "connection"
+      icon: "connection",
+      roles: ['admin', 'editor']
     },
     children: [
       {
